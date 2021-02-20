@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Tech Project</title>
+    <!-- new Added -->
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <meta charset="utf-8" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="assets/style.css" />
+    <link rel="icon" href="assets/icon.webp" />
+  </head>
+
+  <body onload="loadContent()">
+    <div class="loader">
+      <img src="assets/loading.gif" />
+    </div>
+
+    <!-- Static navbar -->
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <div class="navbar-header">
+          <button
+            type="button"
+            class="navbar-toggle collapsed"
+            data-toggle="collapse"
+            data-target="#navbar"
+            aria-expanded="false"
+            aria-controls="navbar"
+          >
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">
+            <b
+              ><span style="color: blue">TECH</span>
+              <span style="color: lightgray">IN</span>
+              <span style="color: black">DEEP</span></b
+            >
+          </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="/#compareSec">Comparison</a></li>
+            <li><a href="/contactUs.html">Contact us</a></li>
+            <li><a href="/all-phones.html">All Phones</a></li>
+          </ul>
+          <div class="navbar-form navbar-left">
+            <input
+              autocomplete="off"
+              type="text"
+              id="serach"
+              class="form-control"
+              placeholder="Search in phoens..."
+              value=""
+            />
+          </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="#">
+                <span class="glyphicon glyphicon-log-in"></span
+                ><input type="button" value="  Login" id="loginBtn1" />
+              </a>
+            </li>
+
+            <li>
+              <a href="/cart.html">
+                <i class="fas fa-shopping-cart" style="font-size: 24px"></i>
+              </a>
+            </li>
+          </ul>
+
+          <div
+            id="darkmo"
+            class="navbar-right"
+            style="width: 25px; margin-top: 14px; margin-right: 15px"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+              <circle cx="467" cy="45" r="15"></circle>
+              <circle cx="497" cy="166" r="15"></circle>
+              <path
+                d="M257 512c109.336 0 206.353-70.668 241.421-174.35 2.139-6.313-.161-13.286-5.625-17.109-5.449-3.794-12.788-3.56-18.003.63C442.464 347.23 403.455 361 362 361c-99.258 0-181-80.742-181-180 0-62.065 32.509-119.989 85.302-153.256 5.654-3.56 7.617-10.459 5.757-16.875C270.213 4.453 263.68 0 257 0 116.39 0 0 115.39 0 256s116.39 256 257 256z"
+              ></path>
+              <path
+                d="M287 121c24.814 0 45 20.186 45 45 0 8.291 6.709 15 15 15s15-6.709 15-15c0-24.814 20.186-45 45-45 8.291 0 15-6.709 15-15s-6.709-15-15-15c-24.814 0-45-21.186-45-46 0-8.291-6.709-15-15-15s-15 6.709-15 15c0 24.814-20.186 46-45 46-8.291 0-15 6.709-15 15s6.709 15 15 15z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <div class="tid_search_result">
+      <div class="phoneresultarea">
+        <span class="topdesc">Phone Specifications</span>
+        <div class="phoneresult"></div>
+      </div>
+    </div>
+
+    <!-- Login hidden div -->
+    <div id="login">
+      <b>
+        <h3>Login</h3>
+      </b>
+      New to here?
+      <input type="button" id="signup" value="Create new account" /> <br /><b
+        id="incorrect"
+      ></b
+      ><br /><br />
+      <lable for="username">Insert yout username</lable><br />
+      <input class="form-control" type="text" id="username" /><br />
+      <lable for="pass">Password</lable><br />
+      <input class="form-control" type="password" id="pass" /><br /><br />
+      <input
+        type="button"
+        class="btn btn-block btn-success"
+        id="loginBtn2"
+        value="Login"
+        onclick="login()"
+      />
+    </div>
+    <!--Register hidden div -->
+    <div id="register">
+      <b>
+        <h2>Signup</h2>
+      </b>
+      Already have an account?
+      <input type="button" id="loginInsid" value="Login" /> <br /><b
+        id="fillAllField"
+      ></b
+      ><br /><br />
+      <lable for="fullname">Your Full Name</lable><br />
+      <input class="form-control" type="text" id="fullname" /><br />
+      <lable for="username">Username</lable><br />
+      <input class="form-control" type="text" id="usernameSignup" /><br />
+      <lable for="email">E-mail</lable><br />
+      <input class="form-control" type="email" id="email" /><br />
+      <lable for="pass">Password</lable><br />
+      <input class="form-control" type="password" id="passwordSignUp" /><br />
+      <lable for="pass2">Confirm Password</lable><br />
+      <input
+        class="form-control"
+        type="password"
+        id="passwordSignUp2"
+      /><br /><br />
+      <input
+        type="button"
+        class="btn btn-block btn-success"
+        id="signupBtn"
+        value="Signup"
+        onclick="signUp()"
+      />
+    </div>
+
+    <div class="container-fluid">
+      <div id="recentpostbsd" class="">
+        <div id="bsdslide">
+          <ul class="randomnya"></ul>
+        </div>
+        <div id="buttons">
+          <a href="#" id="prevx" title="prev"></a
+          ><a href="#" id="nextx" title="next"></a>
+        </div>
+      </div>
+
+      <div class="jumbotron jumbotron-fluid text-left" id="compareSec">
+        <div id="overlay"></div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-12">
+              <h1 class="display-6 text-left">
+                Start comparing now with a simple way
+              </h1>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <select id="pr1" class="form-control">
+                  <option selected disabled value="0">
+                    - Select a pproduct -
+                  </option>
+                  <option value="1">Apple</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <select id="pr2" class="form-control">
+                  <option selected disabled value="0">
+                    - Select a pproduct -
+                  </option>
+                  <option value="1">Apple</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button onclick="compare()" class="btn btn-success btn-lg">
+                Compare
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <h2>Phones Categories</h2>
+        <ul class="nav nav-tabs">
+          <li class="active">
+            <a data-toggle="tab" href="#home">All phones</a>
+          </li>
+          <li>
+            <a data-toggle="tab" onclick="loadTab(1)" href="#menu1">Appel</a>
+          </li>
+          <li>
+            <a data-toggle="tab" onclick="loadTab(2)" href="#menu2">Samsung</a>
+          </li>
+          <li>
+            <a data-toggle="tab" onclick="loadTab(3)" href="#menu3">Oppo</a>
+          </li>
+        </ul>
+
+        <div class="tab-content">
+          <div id="home" class="tab-pane fade in active"></div>
+          <div id="menu1" class="tab-pane fade"></div>
+          <div id="menu2" class="tab-pane fade"></div>
+          <div id="menu3" class="tab-pane fade"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid text-center" style="margin-top: 3em">
+      <div class="row">
+        <div class="col-sm-9 rightBorder">
+          <div class="container-fluid" id="latestNews"></div>
+        </div>
+
+        <div class="col-sm-3 text-left">
+          <section id="mobPhones">
+            <h3>Mobiles Phone</h3>
+            <ol class="sidebar-posts" id="phones"></ol>
+          </section>
+          <h1>Suggetsed Compares</h1>
+          <section>
+              <ul id="suggetsed" style="list-style: none;padding:0">
+
+              </ul>                     
+          </section>
+
+          <section id="ads">
+            <h1>Ads</h1>
+            <img src="assets/ads.jpg" width="100%" />
+          </section>
+
+          <h1>Follow us</h1>
+          <div class="follow_bar">
+            <a href="#" rel="nofollow noopener" class="follow_ust" id="telegram"
+              ><i class="fontaw-telegram"></i>Join Our<br />Telegram Channel</a
+            >
+
+            <a
+              href="#"
+              rel="nofollow noopener"
+              class="follow_ust"
+              id="instagram"
+              ><i class="fontaw-instagram"></i>Follow Us<br />on Instagram</a
+            >
+
+            <a href="#" rel="nofollow noopener" class="follow_ust" id="facebook"
+              ><i class="fontaw-facebook"></i>Follow Us<br />on Facebook</a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12 col-md-6">
+            <h6>About</h6>
+            <p class="text-justify">
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Architecto eos minus deserunt aut eligendi aliquam quas odio.
+              Animi molestias eos odit, deleniti totam, impedit esse quae
+              doloremque consectetur, consequuntur sapiente.
+            </p>
+          </div>
+          <div class="col-xs-6 col-md-6">
+            <h6>Links</h6>
+            <ul class="footer-links">
+              <li><a href="/all-phones.html">All phones</a></li>
+              <li><a href="/contactUs.html">Contact Us</a></li>
+            </ul>
+          </div>
+        </div>
+        <hr />
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-sm-6 col-xs-12">
+            <p class="copyright-text">All rights reserved - 2021 &copy;</p>
+          </div>
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <ul class="social-icons">
+              <li>
+                <a class="facebook" href="#" target="_blank"
+                  ><i class="fab fa-facebook"></i
+                ></a>
+              </li>
+              <li>
+                <a class="twitter" href="#" target="_blank"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+              </li>
+              <li>
+                <a class="linkedin" href="#" target="_blank"
+                  ><i class="fab fa-youtube"></i
+                ></a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      var usersData = [];
+      $(document).ready(function () {
+        var login = $("#login").dialog({
+          autoOpen: false,
+          width: 400,
+          show: "blind",
+          hide: "blind",
+          resizable: false,
+          draggable: false,
+          modal: true,
+        });
+        $("#loginBtn1").click(function () {
+          login.dialog("open");
+        });
+
+        // open login form when login clicked
+        $("#loginInsid").click(function () {
+          signup.dialog("close");
+          login.dialog("open");
+        });
+
+        var signup = $("#register").dialog({
+          autoOpen: false,
+          width: 400,
+          show: "blind",
+          hide: "blind",
+          resizable: false,
+          draggable: false,
+          modal: true,
+        });
+        // open register form when signup clicked
+        $("#signup").click(function () {
+          login.dialog("close");
+          signup.dialog("open");
+        });
+      });
+
+      // Below function Executes on click of login button.
+      function login() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("pass").value;
+
+        // Retrieve usersData array from storage
+        var arrayOfValues = JSON.parse(localStorage.getItem("usersData"));
+
+        // Comparing
+        for (var i in arrayOfValues) {
+          var trueUsername = arrayOfValues[i].userName;
+          var truePassword = arrayOfValues[i].Password;
+
+          if (username == trueUsername && password == truePassword) {
+            deleteAllCookies();
+            setCookie("username", username);
+            location.href = "profile.html";
+          } else {
+            var incMesg = document.getElementById("incorrect");
+            incMesg.innerHTML = "username or password incorrect";
+          }
+        }
+      }
+
+      // Below function Executes on click of signup button.
+      function signUp() {
+        //debugger;
+        var fullName = document.getElementById("fullname").value,
+          userName = document.getElementById("usernameSignup").value,
+          Email = document.getElementById("email").value,
+          pass1 = document.getElementById("passwordSignUp").value,
+          pass2 = document.getElementById("passwordSignUp2").value;
+        var incMesg = document.getElementById("fillAllField");
+        var oldVal = JSON.parse(localStorage.getItem("usersData"));
+
+        var userObject = {
+          fullName: fullName,
+          userName: userName,
+          Email: Email,
+          Password: pass1,
+        };
+        if (
+          fullName == "" ||
+          userName == "" ||
+          Email == "" ||
+          pass1 == "" ||
+          pass2 == ""
+        ) {
+          incMesg.innerHTML = "Please fill all Field";
+        } else if (pass1 != pass2) {
+          incMesg.innerHTML = "Two Password Not Match";
+        } else if (oldVal != null) {
+          if (
+            fullName == oldVal.fullName ||
+            userName == oldVal.userName ||
+            Email == oldVal.Email ||
+            pass1 == oldVal.Password
+          ) {
+            incMesg.innerHTML = "This data were used in another account";
+          }
+        } else {
+          if (oldVal == null) {
+            usersData.push(userObject);
+            // Put usersData array into storage
+            localStorage.setItem("usersData", JSON.stringify(usersData));
+          } else {
+            // Retrieve usersData array from storage
+            usersData = [];
+            for (var i = 0; i < oldVal.length; i++) usersData.push(oldVal[i]);
+
+            usersData.push(userObject);
+            localStorage.setItem("usersData", JSON.stringify(usersData));
+          }         
+        }
+            alert("You have registerd, now log in.");
+            location.href = "/";
+      }
+
+      // $("#home").append('result');
+    </script>
+    <script src="assets/script.js"></script>
+    <script src="assets/cookieLib.js"></script>
+  </body>
+</html>
