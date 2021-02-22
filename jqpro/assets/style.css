@@ -189,7 +189,6 @@ ol.sidebar-posts {
   font-weight: 700;
   font-style: normal;
   content: "✓";
-  counter-increment: li-counter;
   border-radius: 100%;
   background-clip: padding-box;
   z-index: 9;
