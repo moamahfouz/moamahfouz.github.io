@@ -13389,7 +13389,7 @@ input[name="carousel"] {
 
 
 .avatar {
-  border-radius: 50%;
+  border-radius: 20%;
   transition: all 1s;
   cursor: pointer;
 }
