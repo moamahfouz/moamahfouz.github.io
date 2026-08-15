@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://crispe-tau.vercel.app/sitemap.xml
+
+# Disallow admin or private paths (if any in future)
+# Disallow: /admin/
