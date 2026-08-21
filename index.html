@@ -1,6 +1,448 @@
-<script>
-    // redirect to
-    // https://moamahfouz.github.io/me
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mohamed Mahfouz — Software Engineer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/png" sizes="16x16" href="./favicon-32x32.png">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="theme-color" content="#ffffff">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap"
+          rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0e1216;
+            --bg-grid: #161c22;
+            --panel: #151b21;
+            --panel-border: #262f38;
+            --gold: #c9a24a;
+            --gold-soft: rgba(201, 162, 74, 0.15);
+            --teal: #4fd1b5;
+            --text: #ece7da;
+            --text-muted: #8b94a0;
+            --radius: 14px;
+        }
 
-    window.location.href = 'https://moamahfouz.github.io/me';
-</script>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-image: radial-gradient(circle at 1px 1px, rgba(201, 162, 74, 0.07) 1px, transparent 1px);
+            background-size: 26px 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 32px 16px;
+        }
+
+        .card {
+            position: relative;
+            width: 50%;
+            min-width: 320px;
+            max-width: 560px;
+            background: var(--panel);
+            border: 1px solid var(--panel-border);
+            border-radius: var(--radius);
+            padding: 48px 44px 40px;
+            box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+            animation: rise 0.7s cubic-bezier(.19, 1, .22, 1) both;
+            margin-top: 10em;
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .avatar-wrap {
+            width: 84px;
+            height: 84px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--gold), var(--teal));
+            margin-bottom: 22px;
+        }
+
+        .avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 3px solid var(--panel);
+        }
+
+        .eyebrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12.5px;
+            letter-spacing: 0.06em;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .eyebrow::before {
+            content: "";
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--teal);
+            box-shadow: 0 0 0 4px rgba(79, 209, 181, 0.15);
+            animation: pulse 2.2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 4px rgba(79, 209, 181, 0.15);
+            }
+            50% {
+                box-shadow: 0 0 0 7px rgba(79, 209, 181, 0.06);
+            }
+        }
+
+        h1 {
+            font-family: 'Fraunces', serif;
+            font-weight: 600;
+            font-size: clamp(30px, 5vw, 40px);
+            line-height: 1.08;
+            margin: 0 0 6px;
+            letter-spacing: -0.01em;
+        }
+
+        h1 span {
+            color: var(--gold);
+            font-style: italic;
+            font-weight: 500;
+        }
+
+        .role {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13.5px;
+            color: var(--text-muted);
+            margin: 0 0 22px;
+        }
+
+        p.bio {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #c7c2b6;
+            margin: 0 0 32px;
+            max-width: 46ch;
+        }
+
+        .bio a {
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(201, 162, 74, 0.4);
+            padding-bottom: 1px;
+            transition: border-color 0.25s ease, color 0.25s ease;
+        }
+
+        .bio a:hover {
+            border-color: var(--gold);
+            color: #e0bf6b;
+        }
+
+        .ledger-rule {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0 0 26px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+        }
+
+        .ledger-rule::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: repeating-linear-gradient(90deg, var(--panel-border) 0 6px, transparent 6px 10px);
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .link-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 4px;
+            text-decoration: none;
+            color: var(--text);
+            border-bottom: 1px solid var(--panel-border);
+            transition: padding-left 0.25s ease, background 0.25s ease, color 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-row:last-child {
+            border-bottom: none;
+        }
+
+        .link-row::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--gold);
+            transform: scaleY(0);
+            transform-origin: bottom;
+            transition: transform 0.3s ease;
+        }
+
+        .link-row:hover {
+            padding-left: 16px;
+            background: var(--gold-soft);
+        }
+
+        .link-row:hover::before {
+            transform: scaleY(1);
+        }
+
+        .link-row:focus-visible {
+            outline: 2px solid var(--teal);
+            outline-offset: 2px;
+            border-radius: 6px;
+        }
+
+        .link-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .icon {
+            width: 19px;
+            height: 19px;
+            flex-shrink: 0;
+            color: var(--text-muted);
+            transition: color 0.25s ease;
+        }
+
+        .link-row:hover .icon {
+            color: var(--gold);
+        }
+
+        .link-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+        }
+
+        .link-sub {
+            display: block;
+            font-family: 'Inter', sans-serif;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
+
+        .arrow {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+            transform: translateX(-4px);
+            opacity: 0;
+            transition: all 0.25s ease;
+        }
+
+        .link-row:hover .arrow {
+            transform: translateX(0);
+            opacity: 1;
+            color: var(--gold);
+        }
+
+        .whatsapp .icon {
+            color: #3fae76;
+            opacity: 0.85;
+        }
+
+        .whatsapp:hover .icon {
+            color: #3fae76;
+            opacity: 1;
+        }
+
+        .whatsapp:hover::before {
+            background: #3fae76;
+        }
+
+        .whatsapp:hover .arrow {
+            color: #3fae76;
+        }
+
+        .whatsapp:hover {
+            background: rgba(63, 174, 118, 0.1);
+        }
+
+        .youtube .icon {
+            color: #e05a5a;
+            opacity: 0.85;
+        }
+
+        .youtube:hover .icon {
+            color: #e05a5a;
+            opacity: 1;
+        }
+
+        .youtube:hover::before {
+            background: #e05a5a;
+        }
+
+        .youtube:hover .arrow {
+            color: #e05a5a;
+        }
+
+        .youtube:hover {
+            background: rgba(224, 90, 90, 0.1);
+        }
+
+        footer {
+            margin-top: 32px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            letter-spacing: 0.04em;
+        }
+
+        @media (max-width: 720px) {
+            .card {
+                width: 100%;
+                padding: 36px 26px 30px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card {
+                animation: none;
+            }
+
+            .eyebrow::before {
+                animation: none;
+            }
+
+            .link-row, .icon, .arrow {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<main class="card">
+    <div class="avatar-wrap">
+        <img src="https://moamahfouz.github.io/me/assets/moa.jpg" alt="Photo of Mohamed">
+    </div>
+
+    <div class="eyebrow">Senior Software Developer</div>
+
+    <h1>Mohamed Mahfouz<span>.</span></h1>
+    <p class="role">Backend PHP/Nodejs | GPS telematics integrations | Fleet Systems</p>
+
+    <p class="bio">
+        I build full-stack web applications, with 6+ years of experience shipping
+        products end to end — a fair share of them in fin-tech. Currently completing
+        a Master's in Computer Science. Based in Egypt, working comfortably in
+        Arabic and English. I also create content on <a href="https://youtube.com/@reachstar" target="_blank">YouTube</a> , breaking down programming
+        concepts — things like what Redis is, how WebSockets work, and more.
+        <a href="https://moamahfouz.github.io/me/" target="_blank" rel="noopener">Know more about me →</a>
+    </p>
+
+    <div class="ledger-rule">CONNECT</div>
+
+    <nav class="links" aria-label="Social links">
+
+        <a class="link-row" href="https://github.com/moamahfouz" target="_blank" rel="noopener">
+        <span class="link-left">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path
+                  d="M12 .5C5.73.5.98 5.24.98 11.52c0 5.02 3.26 9.28 7.78 10.78.57.1.78-.25.78-.55 0-.27-.01-1.16-.02-2.1-3.17.69-3.84-1.35-3.84-1.35-.52-1.32-1.27-1.67-1.27-1.67-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.02 1.75 2.67 1.25 3.32.95.1-.74.4-1.25.72-1.53-2.53-.29-5.19-1.27-5.19-5.63 0-1.24.44-2.26 1.17-3.05-.12-.29-.51-1.46.11-3.04 0 0 .96-.31 3.14 1.16a10.9 10.9 0 0 1 5.72 0c2.18-1.47 3.14-1.16 3.14-1.16.62 1.58.23 2.75.11 3.04.73.79 1.17 1.81 1.17 3.05 0 4.37-2.66 5.34-5.2 5.62.41.36.77 1.06.77 2.14 0 1.55-.01 2.79-.01 3.17 0 .3.2.66.79.55A11.03 11.03 0 0 0 23.02 11.5C23.02 5.24 18.27.5 12 .5Z"/></svg>
+          <span>
+            <span class="link-label">github</span>
+            <span class="link-sub">Code & side projects</span>
+          </span>
+        </span>
+            <span class="arrow">↗</span>
+        </a>
+
+        <a class="link-row" href="https://linkedin.com/in/moamahfouz" target="_blank" rel="noopener">
+        <span class="link-left">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path
+                  d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
+          <span>
+            <span class="link-label">linkedin</span>
+            <span class="link-sub">Work history & recommendations</span>
+          </span>
+        </span>
+            <span class="arrow">↗</span>
+        </a>
+
+        <a class="link-row whatsapp" href="https://wa.me/+201099633746" target="_blank" rel="noopener">
+        <span class="link-left">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path
+                  d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.85.5 3.58 1.36 5.07L2 22l5.06-1.33A9.94 9.94 0 0 0 12.02 22C17.55 22 22 17.52 22 12S17.55 2 12.02 2Zm0 18.03c-1.65 0-3.19-.48-4.48-1.32l-.32-.19-3 .79.8-2.93-.21-.3a8.02 8.02 0 0 1-1.26-4.28c0-4.43 3.6-8.03 8.02-8.03 4.42 0 8.02 3.6 8.02 8.03 0 4.42-3.6 8.23-8.02 8.23Zm4.4-6.02c-.24-.12-1.43-.7-1.65-.79-.22-.08-.38-.12-.55.12-.16.24-.63.79-.77.95-.14.16-.28.18-.52.06-.24-.12-1.01-.37-1.92-1.18-.71-.63-1.19-1.41-1.33-1.65-.14-.24-.02-.37.1-.5.11-.1.24-.27.36-.4.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.8-.2-.48-.4-.42-.55-.42-.14 0-.3-.02-.46-.02-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.02 0 1.2.87 2.35.99 2.51.12.16 1.71 2.6 4.14 3.65.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.15-.06-.1-.22-.16-.46-.28Z"/></svg>
+          <span>
+            <span class="link-label">whatsapp</span>
+            <span class="link-sub">Fastest way to reach me</span>
+          </span>
+        </span>
+            <span class="arrow">↗</span>
+        </a>
+
+        <a class="link-row youtube" href="https://youtube.com/@reachstar" target="_blank" rel="noopener">
+        <span class="link-left">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path
+                  d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.38.55A3.02 3.02 0 0 0 .5 6.19 31.6 31.6 0 0 0 0 12a31.6 31.6 0 0 0 .5 5.81 3.02 3.02 0 0 0 2.12 2.14C4.5 20.5 12 20.5 12 20.5s7.5 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14A31.6 31.6 0 0 0 24 12a31.6 31.6 0 0 0-.5-5.81ZM9.6 15.5v-7l6.27 3.5-6.27 3.5Z"/></svg>
+          <span>
+            <span class="link-label">youtube</span>
+            <span class="link-sub">reachstar — programming concepts explained</span>
+          </span>
+        </span>
+            <span class="arrow">↗</span>
+        </a>
+
+        <a class="link-row" href="mailto:moa.mahfouz@gmail.com">
+        <span class="link-left">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path
+                  d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
+          <span>
+            <span class="link-label">email</span>
+            <span class="link-sub">For proposals & inquiries</span>
+          </span>
+        </span>
+            <span class="arrow">↗</span>
+        </a>
+    </nav>
+
+    <footer>© 2026 Mohamed Mahfouz · Egypt</footer>
+</main>
+
+</body>
+</html>

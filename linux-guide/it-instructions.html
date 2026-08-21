@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LDAP Bridge — IT Setup Instructions</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0f12;
+    --surface: #13161b;
+    --border: #222630;
+    --accent: #3b82f6;
+    --accent2: #10b981;
+    --warn: #f59e0b;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --code-bg: #090b0e;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+    line-height: 1.7;
+  }
+
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  header {
+    border-left: 3px solid var(--accent);
+    padding-left: 20px;
+    margin-bottom: 52px;
+  }
+  header .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 44px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+
+  .step-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 4px;
+    padding: 3px 8px;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .step-num.green { background: var(--accent2); }
+  .step-num.amber { background: var(--warn); color: #000; }
+
+  .section-header h2 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* ── Steps list ── */
+  .steps {
+    list-style: none;
+    border-left: 1px solid var(--border);
+    margin: 0 0 0 16px;
+    padding: 0;
+  }
+  .steps li {
+    position: relative;
+    padding: 0 0 20px 28px;
+    color: var(--text);
+    font-size: 14.5px;
+  }
+  .steps li:last-child { padding-bottom: 0; }
+  .steps li::before {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: 7px;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .steps li strong { color: #fff; }
+  .steps li .note {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  /* ── Code block ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 14px 0;
+  }
+  .code-block .cb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-block .cb-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .code-block .copy-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 4px;
+    padding: 3px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .code-block .copy-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .code-block pre {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 16px;
+    overflow-x: auto;
+    color: #94a3b8;
+  }
+  .code-block pre .hl  { color: #7dd3fc; }   /* command */
+  .code-block pre .cm  { color: #475569; }   /* comment */
+  .code-block pre .val { color: #86efac; }   /* value / string */
+  .code-block pre .key { color: #fbbf24; }   /* key */
+
+  /* ── Info row ── */
+  .info-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .info-row:last-child { border-bottom: none; }
+  .info-row .ir-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    min-width: 130px;
+    padding-top: 2px;
+  }
+  .info-row .ir-val { color: var(--text); flex: 1; }
+  .info-row .ir-val code {
+    font-family: 'IBM Plex Mono', monospace;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #7dd3fc;
+  }
+
+  /* ── Alert ── */
+  .alert {
+    display: flex;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 13.5px;
+    margin: 14px 0;
+  }
+  .alert.blue  { background: #1e3a5f; border: 1px solid #2563eb; }
+  .alert.green { background: #064e3b; border: 1px solid #059669; }
+  .alert.amber { background: #451a03; border: 1px solid #d97706; }
+  .alert .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert p { color: var(--text); line-height: 1.6; }
+  .alert strong { color: #fff; }
+
+  /* ── Divider ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 40px 0;
+  }
+
+  /* ── Footer ── */
+  footer {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="label">IT Setup Guide · LDAP Bridge</div>
+    <h1>Active Directory Authentication Bridge</h1>
+    <p>Instructions for deploying the Node.js bridge service on an internal server and exposing it securely.</p>
+  </header>
+
+  <!-- ── PART 1: REQUIREMENTS ─────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num amber">BEFORE YOU START</span>
+      <h2>What You Need</h2>
+    </div>
+    <div class="card">
+      <div class="info-row">
+        <span class="ir-label">Internal Server</span>
+        <span class="ir-val">Any Windows or Linux machine <strong>inside the company network</strong> that can reach Active Directory</span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">Node.js</span>
+        <span class="ir-val">Version <code>18</code> or higher — <a href="https://nodejs.org" style="color:var(--accent)">nodejs.org</a></span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">Internet access</span>
+        <span class="ir-val">The internal server needs outbound internet to download packages (or IT can use a local mirror)</span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">AD details</span>
+        <span class="ir-val">Hostname of the AD server (e.g. <code>server02.rahili.local</code>) and the domain name (e.g. <code>rahili.local</code>)</span>
+      </div>
+      <div class="info-row">
+        <span class="ir-label">Project files</span>
+        <span class="ir-val">The <code>ldap-bridge</code> folder provided — copy it to the internal server</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PART 2: INSTALL ───────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num">STEP 01</span>
+      <h2>Install Node.js on the Internal Server</h2>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Run the appropriate commands for the server OS:</p>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Ubuntu / Debian Linux</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="hl">curl</span> -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+<span class="hl">sudo apt-get install</span> -y nodejs
+<span class="cm"># Verify installation</span>
+<span class="hl">node</span> --version</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Windows Server (PowerShell)</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Download installer from:</span>
+<span class="val">https://nodejs.org/en/download</span>
+<span class="cm"># After install, verify:</span>
+<span class="hl">node</span> --version</pre>
+    </div>
+  </div>
+
+  <!-- ── PART 3: CONFIGURE ─────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num">STEP 02</span>
+      <h2>Copy Files & Configure</h2>
+    </div>
+
+    <ol class="steps">
+      <li>
+        <strong>Copy the <code>ldap-bridge</code> folder</strong> to the internal server.<br/>
+        <span class="note">Suggested path: <code>C:\ldap-bridge</code> on Windows &nbsp;/&nbsp; <code>/opt/ldap-bridge</code> on Linux</span>
+      </li>
+      <li>
+        <strong>Open a terminal</strong> inside the <code>ldap-bridge</code> folder and run:
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">npm install</span></pre>
+        </div>
+      </li>
+      <li>
+        <strong>Create the config file</strong> — copy the example and rename it:
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">Linux</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">cp</span> .env.example .env</pre>
+        </div>
+        <div class="code-block">
+          <div class="cb-header">
+            <span class="cb-label">Windows</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">copy</span> .env.example .env</pre>
+        </div>
+      </li>
+      <li>
+        <strong>Edit the <code>.env</code> file</strong> with a text editor and fill in these values:
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">.env</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="key">PORT</span>=<span class="val">3000</span>
+<span class="key">API_SECRET_KEY</span>=<span class="val">replace-this-with-a-long-random-password</span>
+<span class="key">LDAP_URL</span>=<span class="val">ldap://server02.rahili.local</span>
+<span class="key">LDAP_BASE_DN</span>=<span class="val">DC=rahili,DC=local</span>
+<span class="key">LDAP_DOMAIN</span>=<span class="val">rahili.local</span></pre>
+        </div>
+        <div class="alert amber">
+          <span class="icon">⚠️</span>
+          <p><strong>API_SECRET_KEY</strong> is the password between the bridge and the Laravel server. Make it long and random (e.g. <code>xK9@mP2#vR7!qL4$nW</code>). Share this value with the developer — it goes into Laravel's <code>.env</code> file.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ── PART 4: TEST ──────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num">STEP 03</span>
+      <h2>Test the Connection to Active Directory</h2>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Before going further, confirm the server can reach AD:</p>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Terminal — ping test</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="hl">ping</span> server02.rahili.local</pre>
+    </div>
+
+    <div class="alert green">
+      <span class="icon">✅</span>
+      <p><strong>Expected:</strong> You get replies with an IP address. This confirms the internal server can see Active Directory.</p>
+    </div>
+    <div class="alert amber">
+      <span class="icon">❌</span>
+      <p><strong>If ping fails:</strong> The internal server is not on the same network as Active Directory. Contact the network team to fix routing before continuing.</p>
+    </div>
+  </div>
+
+  <!-- ── PART 5: RUN ───────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num">STEP 04</span>
+      <h2>Run the Bridge Service</h2>
+    </div>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Start (test)</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="hl">npm start</span>
+<span class="cm"># You should see:</span>
+<span class="val">[INFO] LDAP Bridge running on port 3000</span>
+<span class="val">[INFO] LDAP server: ldap://server02.rahili.local</span></pre>
+    </div>
+
+    <p style="font-size:14px;color:var(--muted);margin:16px 0 10px;">For <strong>production</strong> — keep it running permanently with PM2:</p>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">PM2 — permanent background service</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Install PM2 globally (one time)</span>
+<span class="hl">npm install</span> -g pm2
+
+<span class="cm"># Start the bridge</span>
+<span class="hl">pm2 start</span> server.js --name ldap-bridge
+
+<span class="cm"># Auto-start on server reboot</span>
+<span class="hl">pm2 save</span>
+<span class="hl">pm2 startup</span></pre>
+    </div>
+
+    <div class="alert blue">
+      <span class="icon">ℹ️</span>
+      <p>PM2 will keep the bridge running even after reboots. To check status anytime: <code>pm2 status</code></p>
+    </div>
+  </div>
+
+  <hr class="divider" />
+
+  <!-- ── PART 6: PUBLIC DOMAIN ─────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num green">STEP 05</span>
+      <h2>Expose It with a Public Domain (nginx + HTTPS)</h2>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:20px;">
+      The bridge runs on <code>localhost:3000</code>. To make it reachable from the Laravel server on the internet, you need nginx as a reverse proxy with HTTPS. This is the safest way — the bridge is never directly exposed, only nginx is.
+    </p>
+
+    <ol class="steps">
+      <li>
+        <strong>Point a domain to this server's public IP.</strong><br/>
+        <span class="note">Example: create an A record → <code>ldap-bridge.yourcompany.com</code> → <code>your.server.public.ip</code></span>
+      </li>
+      <li>
+        <strong>Install nginx and Certbot</strong> (for free HTTPS certificate):
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">Ubuntu / Debian</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">sudo apt install</span> -y nginx certbot python3-certbot-nginx</pre>
+        </div>
+      </li>
+      <li>
+        <strong>Create nginx config</strong> — create file <code>/etc/nginx/sites-available/ldap-bridge</code>:
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">nginx config</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre>server {
+    listen 80;
+    <span class="key">server_name</span> <span class="val">ldap-bridge.yourcompany.com</span>;
+
+    location / {
+        <span class="key">proxy_pass</span>         <span class="val">http://127.0.0.1:3000</span>;
+        proxy_http_version  1.1;
+        proxy_set_header    Host              $host;
+        proxy_set_header    X-Real-IP         $remote_addr;
+        proxy_set_header    X-Forwarded-For   $proxy_add_x_forwarded_for;
+    }
+}</pre>
+        </div>
+      </li>
+      <li>
+        <strong>Enable the config and get HTTPS certificate:</strong>
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">sudo ln</span> -s /etc/nginx/sites-available/ldap-bridge /etc/nginx/sites-enabled/
+<span class="hl">sudo nginx</span> -t           <span class="cm"># test config — should say "ok"</span>
+<span class="hl">sudo systemctl reload</span> nginx
+
+<span class="cm"># Get free HTTPS certificate (follow prompts)</span>
+<span class="hl">sudo certbot</span> --nginx -d ldap-bridge.yourcompany.com</pre>
+        </div>
+      </li>
+      <li>
+        <strong>Restrict access by IP</strong> — only allow the Laravel server, block everything else.<br/>
+        Add this inside the <code>location /</code> block in the nginx config:
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">nginx — IP whitelist</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="key">allow</span>  <span class="val">LARAVEL_SERVER_IP</span>;   <span class="cm"># ← replace with real IP</span>
+<span class="key">deny</span>   all;</pre>
+        </div>
+        <div class="alert green">
+          <span class="icon">🔒</span>
+          <p><strong>This is critical.</strong> IP whitelisting means even if someone discovers the URL, they cannot reach the bridge. Only the Laravel server can talk to it.</p>
+        </div>
+      </li>
+      <li>
+        <strong>Reload nginx to apply all changes:</strong>
+        <div class="code-block" style="margin-top:10px">
+          <div class="cb-header">
+            <span class="cb-label">Terminal</span>
+            <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><span class="hl">sudo systemctl reload</span> nginx</pre>
+        </div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ── PART 7: VERIFY ────────────────────────────────────── -->
+  <div class="section">
+    <div class="section-header">
+      <span class="step-num green">STEP 06</span>
+      <h2>Verify Everything Works</h2>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin-bottom:16px;">Run this from any machine to confirm the bridge is live:</p>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Health check</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="hl">curl</span> https://ldap-bridge.yourcompany.com/health</pre>
+    </div>
+
+    <div class="alert green">
+      <span class="icon">✅</span>
+      <p><strong>Expected response:</strong><br/>
+      <code>{"status":"ok","service":"ldap-bridge","timestamp":"2025-..."}</code></p>
+    </div>
+
+    <p style="color:var(--muted);font-size:14px;margin:20px 0 12px;">Test an actual AD login:</p>
+
+    <div class="code-block">
+      <div class="cb-header">
+        <span class="cb-label">Auth test</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="hl">curl</span> -X POST https://ldap-bridge.yourcompany.com/auth \
+  -H <span class="val">"Content-Type: application/json"</span> \
+  -H <span class="val">"X-Api-Key: your-secret-key"</span> \
+  -d <span class="val">'{"username":"john.doe","password":"their-password"}'</span></pre>
+    </div>
+
+    <div class="alert blue">
+      <span class="icon">📩</span>
+      <p><strong>Send to the developer once done:</strong> The public URL (<code>https://ldap-bridge.yourcompany.com</code>) and the <code>API_SECRET_KEY</code> value from the <code>.env</code> file. That's all they need to wire up Laravel.</p>
+    </div>
+  </div>
+
+  <footer>
+    LDAP Bridge · Node.js · Prepared for IT deployment · All credentials must be shared securely (not by email)
+  </footer>
+</div>
+
+<script>
+  function copyCode(btn) {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    const text = pre.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
