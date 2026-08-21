@@ -1,0 +1,1908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linux for Beginners — 42 Lessons</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Syne:wght@400;600;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0d1117;
+    --bg2:       #161b22;
+    --bg3:       #1c2333;
+    --border:    #30363d;
+    --text:      #c9d1d9;
+    --muted:     #8b949e;
+    --accent:    #58a6ff;
+    --green:     #3fb950;
+    --yellow:    #d29922;
+    --red:       #f85149;
+    --purple:    #bc8cff;
+    --teal:      #39d353;
+    --orange:    #e3b341;
+    --code-bg:   #010409;
+    --tag-bg:    #1f2937;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* ── Sidebar ──────────────────────────────────────── */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    padding: 1.5rem 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-logo {
+    padding: 0 1.2rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.8rem;
+  }
+  .sidebar-logo .logo-icon { font-size: 1.6rem; }
+  .sidebar-logo h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #fff;
+    letter-spacing: 0.02em;
+    margin-top: 0.3rem;
+  }
+  .sidebar-logo p {
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+
+  .nav-part {
+    padding: 0.5rem 1.2rem 0.2rem;
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .nav-item {
+    display: block;
+    padding: 0.3rem 1.2rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: all 0.15s ease;
+    border-left: 2px solid transparent;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .nav-item:hover { color: var(--text); background: var(--bg3); border-left-color: var(--border); }
+  .nav-item.active { color: var(--accent); border-left-color: var(--accent); background: rgba(88,166,255,0.06); }
+
+  /* ── Main Content ─────────────────────────────────── */
+  #main {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  /* ── Hero ─────────────────────────────────────────── */
+  #hero {
+    background: linear-gradient(135deg, #0d1117 0%, #1a1f35 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 4rem 3rem 3rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 380px; height: 380px;
+    background: radial-gradient(circle, rgba(88,166,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  #hero::after {
+    content: '🐧';
+    position: absolute;
+    right: 3rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 7rem;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .hero-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    margin-bottom: 0.8rem;
+  }
+  #hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  #hero h1 span { color: var(--accent); }
+  #hero p {
+    font-size: 1rem;
+    color: var(--muted);
+    max-width: 540px;
+    margin-bottom: 2rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-top: 0.2rem;
+  }
+
+  /* ── Content Area ─────────────────────────────────── */
+  .content {
+    padding: 2rem 3rem;
+    max-width: 860px;
+  }
+
+  /* ── Part Header ──────────────────────────────────── */
+  .part-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 3rem 0 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .part-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: var(--accent);
+    color: #000;
+    padding: 0.25rem 0.7rem;
+    border-radius: 999px;
+  }
+  .part-header h2 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  /* ── Lesson Card ──────────────────────────────────── */
+  .lesson {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+  }
+  .lesson:hover { border-color: rgba(88,166,255,0.35); }
+
+  .lesson-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+    background: var(--bg2);
+  }
+  .lesson-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(88,166,255,0.1);
+    border: 1px solid rgba(88,166,255,0.25);
+    padding: 0.2rem 0.55rem;
+    border-radius: 6px;
+    min-width: 42px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .lesson-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+    flex: 1;
+  }
+  .lesson-toggle {
+    font-size: 0.8rem;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .lesson.open .lesson-toggle { transform: rotate(180deg); }
+
+  .lesson-body {
+    display: none;
+    padding: 0 1.4rem 1.4rem;
+    border-top: 1px solid var(--border);
+  }
+  .lesson.open .lesson-body { display: block; }
+
+  /* ── Section Tag ──────────────────────────────────── */
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--yellow);
+    background: rgba(210,153,34,0.1);
+    border: 1px solid rgba(210,153,34,0.25);
+    padding: 0.2rem 0.65rem;
+    border-radius: 6px;
+    margin: 1rem 0 0.5rem;
+  }
+
+  /* ── Body text ────────────────────────────────────── */
+  .body-text {
+    color: var(--text);
+    font-size: 0.9rem;
+    line-height: 1.75;
+    margin: 0.5rem 0;
+  }
+
+  /* ── Bullets ──────────────────────────────────────── */
+  ul.bullets {
+    list-style: none;
+    margin: 0.4rem 0;
+    padding: 0;
+  }
+  ul.bullets li {
+    font-size: 0.88rem;
+    color: var(--text);
+    padding: 0.2rem 0 0.2rem 1.4rem;
+    position: relative;
+    line-height: 1.6;
+  }
+  ul.bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0.2rem;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  /* ── Note ─────────────────────────────────────────── */
+  .note {
+    background: rgba(210,153,34,0.07);
+    border-left: 3px solid var(--yellow);
+    padding: 0.7rem 1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    color: var(--orange);
+    margin: 0.8rem 0;
+    line-height: 1.6;
+  }
+  .note strong { font-weight: 700; }
+
+  /* ── Example ──────────────────────────────────────── */
+  .example {
+    background: rgba(63,185,80,0.06);
+    border-left: 3px solid var(--green);
+    padding: 0.7rem 1rem;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    color: #7ee787;
+    margin: 0.8rem 0;
+    line-height: 1.6;
+  }
+  .example strong { color: var(--green); }
+
+  /* ── Code Block ───────────────────────────────────── */
+  .code-wrap {
+    margin: 0.8rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .code-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #1c2333;
+    padding: 0.4rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-dots { display: flex; gap: 0.35rem; }
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+  .code-lang {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--text); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  pre {
+    background: var(--code-bg);
+    padding: 1rem 1.1rem;
+    overflow-x: auto;
+    margin: 0;
+  }
+  pre::-webkit-scrollbar { height: 4px; }
+  pre::-webkit-scrollbar-track { background: transparent; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #e6edf3;
+  }
+
+  /* Syntax highlighting */
+  .cm  { color: #8b949e; font-style: italic; }   /* comment */
+  .kw  { color: #ff7b72; }                         /* keyword/command */
+  .st  { color: #a5d6ff; }                         /* string */
+  .fl  { color: #79c0ff; }                         /* flag */
+  .op  { color: #ffa657; }                         /* operator / special */
+  .pu  { color: var(--purple); }                   /* purple */
+
+  /* inline code */
+  code.inline {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.82em;
+    color: var(--accent);
+  }
+
+  /* ── Cheat Sheet Table ────────────────────────────── */
+  .cheat-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 0.82rem;
+  }
+  .cheat-table th {
+    background: var(--bg3);
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.7rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--accent);
+  }
+  .cheat-table td {
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .cheat-table tr:hover td { background: var(--bg3); }
+  .cheat-table .cmd {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--green);
+    font-size: 0.78rem;
+    white-space: nowrap;
+  }
+  .cheat-table .desc { color: var(--text); }
+
+  /* ── Responsive ───────────────────────────────────── */
+  @media (max-width: 768px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; }
+    .content { padding: 1.2rem; }
+    #hero { padding: 2rem 1.2rem; }
+    #hero::after { display: none; }
+    .hero-stats { gap: 1.2rem; }
+    #menu-btn { display: flex; }
+  }
+
+  #menu-btn {
+    display: none;
+    position: fixed;
+    top: 1rem; left: 1rem;
+    z-index: 200;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+  }
+
+  #overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 90;
+  }
+  #overlay.show { display: block; }
+
+  /* progress bar */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    width: 0%;
+    z-index: 300;
+    transition: width 0.1s;
+  }
+
+  /* back to top */
+  #back-top {
+    position: fixed;
+    bottom: 1.5rem; right: 1.5rem;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 1.1rem;
+    text-decoration: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 50;
+  }
+  #back-top.visible { opacity: 1; }
+
+  /* search */
+  #search-wrap {
+    padding: 0.8rem 1.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  #search {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    outline: none;
+  }
+  #search:focus { border-color: var(--accent); }
+  #search::placeholder { color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+<button id="menu-btn" onclick="toggleSidebar()">☰</button>
+<div id="overlay" onclick="toggleSidebar()"></div>
+<a href="#" id="back-top">↑</a>
+
+<!-- ── SIDEBAR ─────────────────────────────────────── -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-icon">🐧</div>
+    <h2>Linux for Beginners</h2>
+    <p>42 Lessons · Complete Guide</p>
+  </div>
+  <div id="search-wrap">
+    <input id="search" type="text" placeholder="Filter lessons…" oninput="filterNav(this.value)">
+  </div>
+  <div id="nav-list">
+    <div class="nav-part">Part 1 — Warmup</div>
+    <a href="#l01" class="nav-item">01 OS Introduction</a>
+    <a href="#l02" class="nav-item">02 Virtual Machines</a>
+    <a href="#l03" class="nav-item">03 OS History</a>
+    <a href="#l04" class="nav-item">04 Ubuntu VM Setup</a>
+    <a href="#l05" class="nav-item">05 Bash & Terminal</a>
+    <a href="#l06" class="nav-item">06 Linux Distros</a>
+    <a href="#l07" class="nav-item">07 WSL on Windows</a>
+    <a href="#l08" class="nav-item">08 Diffie-Hellman</a>
+    <a href="#l09" class="nav-item">09 MAC & RSA</a>
+    <a href="#l10" class="nav-item">10 SSH Intro</a>
+    <a href="#l11" class="nav-item">11 SSH Password Login</a>
+    <a href="#l12" class="nav-item">12 SSH Key Pairs</a>
+    <a href="#l13" class="nav-item">13 Unix Philosophy</a>
+    <div class="nav-part">Part 2 — Files</div>
+    <a href="#l14" class="nav-item">14 Navigating Directories</a>
+    <a href="#l15" class="nav-item">15 Create / Delete / Move</a>
+    <a href="#l16" class="nav-item">16 Vim Editor</a>
+    <a href="#l17" class="nav-item">17 Pipes & Text Tools</a>
+    <a href="#l18" class="nav-item">18 Everything is a File</a>
+    <a href="#l19" class="nav-item">19 Filesystem Hierarchy</a>
+    <a href="#l20" class="nav-item">20 Redirection</a>
+    <a href="#l21" class="nav-item">21 Compare & Search</a>
+    <a href="#l22" class="nav-item">22 grep</a>
+    <a href="#l23" class="nav-item">23 sed</a>
+    <a href="#l24" class="nav-item">24 awk</a>
+    <a href="#l25" class="nav-item">25 Virtual File System</a>
+    <a href="#l26" class="nav-item">26 Hard & Soft Links</a>
+    <div class="nav-part">Part 3 — Processes</div>
+    <a href="#l27" class="nav-item">27 System Calls</a>
+    <a href="#l28" class="nav-item">28 Interrupts</a>
+    <a href="#l29" class="nav-item">29 Processes & Threads</a>
+    <a href="#l30" class="nav-item">30 CPU Scheduler</a>
+    <a href="#l31" class="nav-item">31 IPC – Signals</a>
+    <a href="#l32" class="nav-item">32 IPC – Pipes</a>
+    <a href="#l33" class="nav-item">33 IPC – Queues & Shared Mem</a>
+    <a href="#l34" class="nav-item">34 Mutex</a>
+    <a href="#l35" class="nav-item">35 Semaphore</a>
+    <a href="#l36" class="nav-item">36 File Lock</a>
+    <div class="nav-part">Part 4 — Memory</div>
+    <a href="#l37" class="nav-item">37 Memory Pages</a>
+    <a href="#l38" class="nav-item">38 Virtual Memory</a>
+    <a href="#l39" class="nav-item">39 Memory Management</a>
+    <a href="#l40" class="nav-item">40 Overcommit Policy</a>
+    <div class="nav-part">Part 5 — Monitoring</div>
+    <a href="#l41" class="nav-item">41 Memory Monitoring</a>
+    <a href="#l42" class="nav-item">42 Process Monitoring</a>
+    <div class="nav-part">Reference</div>
+    <a href="#cheatsheet" class="nav-item">⚡ Cheat Sheet</a>
+  </div>
+</nav>
+
+<!-- ── MAIN ───────────────────────────────────────── -->
+<main id="main">
+
+  <section id="hero">
+    <div class="hero-label">// beginner guide · 42 lessons</div>
+    <h1>Linux for <span>Beginners</span></h1>
+    <p>A complete, plain-English guide to Linux. Real examples, no jargon. From the command line basics all the way to memory management.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">42</div><div class="stat-label">Lessons</div></div>
+      <div class="stat"><div class="stat-num">5</div><div class="stat-label">Parts</div></div>
+      <div class="stat"><div class="stat-num">100+</div><div class="stat-label">Code Examples</div></div>
+      <div class="stat"><div class="stat-num">0</div><div class="stat-label">Jargon</div></div>
+    </div>
+  </section>
+
+  <div class="content">
+
+<!-- ══════════════════════════════════════════════════
+     PART 1 — WARMUP
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="part1">
+  <span class="part-badge">Part 1</span>
+  <h2>Warmup — OS, SSH & Security</h2>
+</div>
+
+<!-- L01 -->
+<div class="lesson open" id="l01">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">01</span>
+    <span class="lesson-title">OS Introduction</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">An <strong>Operating System (OS)</strong> is the software that manages your computer's hardware and lets you run programs. Think of it as the building manager — it decides who gets which room (memory), who uses the elevator (CPU), and controls the doors (I/O devices).</p>
+    <div class="tag">⚙ Key Concepts</div>
+    <ul class="bullets">
+      <li><strong>Kernel</strong> — the core that talks directly to hardware</li>
+      <li><strong>Shell</strong> — the interface you type commands into</li>
+      <li><strong>Process</strong> — any running program</li>
+      <li><strong>File System</strong> — how files are stored and organized</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> Windows, macOS, and Linux are all operating systems. Linux is used on most servers worldwide, in Android phones, and in supercomputers.</div>
+  </div>
+</div>
+
+<!-- L02 -->
+<div class="lesson" id="l02">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">02</span>
+    <span class="lesson-title">Virtual Machine Introduction</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A <strong>Virtual Machine (VM)</strong> is a computer inside your computer. It runs its own OS without affecting your real system, using software called a <em>hypervisor</em>.</p>
+    <div class="tag">💡 Why Use a VM?</div>
+    <ul class="bullets">
+      <li>Safely try Linux without breaking your main OS</li>
+      <li>Test software in an isolated sandbox</li>
+      <li>Run multiple OSes at the same time</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> VirtualBox is a free hypervisor. Install it on Windows, then create a VM that runs Ubuntu Linux inside a window.</div>
+    <div class="note">💡 Think of a VM like a sandbox — you can build and destroy things without affecting the real world outside.</div>
+  </div>
+</div>
+
+<!-- L03 -->
+<div class="lesson" id="l03">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">03</span>
+    <span class="lesson-title">OS Evolution History</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Understanding history helps you understand why Linux works the way it does today.</p>
+    <div class="tag">📅 Timeline</div>
+    <ul class="bullets">
+      <li><strong>1969</strong> — Unix created at Bell Labs. Simple, powerful, influential design.</li>
+      <li><strong>1983</strong> — GNU Project by Richard Stallman (free software movement)</li>
+      <li><strong>1991</strong> — Linus Torvalds creates the Linux kernel as a hobby project</li>
+      <li><strong>1992</strong> — Linux + GNU tools = a complete free operating system</li>
+      <li><strong>2000s+</strong> — Linux dominates servers, powers Android, runs supercomputers</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> When you use an Android phone, you're running Linux under the hood!</div>
+  </div>
+</div>
+
+<!-- L04 -->
+<div class="lesson" id="l04">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">04</span>
+    <span class="lesson-title">Create Local Ubuntu VM using VirtualBox</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="tag">📋 Steps</div>
+    <ul class="bullets">
+      <li>Download VirtualBox from <strong>virtualbox.org</strong> and install it</li>
+      <li>Download the Ubuntu ISO from <strong>ubuntu.com/download</strong></li>
+      <li>Open VirtualBox → New → Name it "Ubuntu" → Choose Linux type</li>
+      <li>Assign RAM (2 GB minimum, 4 GB recommended)</li>
+      <li>Create a virtual hard disk (20 GB+)</li>
+      <li>Start the VM, select the Ubuntu ISO, follow the installer</li>
+    </ul>
+    <div class="note">💡 After install, install <strong>Guest Additions</strong> for better screen resolution and copy-paste support.</div>
+  </div>
+</div>
+
+<!-- L05 -->
+<div class="lesson" id="l05">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">05</span>
+    <span class="lesson-title">Bash and Terminal Introduction</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">The <strong>terminal</strong> is a text window where you type commands. <strong>Bash</strong> is the most popular shell (command interpreter) on Linux.</p>
+    <div class="tag">⌨ First Commands</div>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">whoami</span>         <span class="cm"># shows your username</span>
+<span class="fl">$</span> <span class="kw">pwd</span>            <span class="cm"># shows current directory (where you are)</span>
+<span class="fl">$</span> <span class="kw">ls</span>             <span class="cm"># lists files in current directory</span>
+<span class="fl">$</span> <span class="kw">echo</span> <span class="st">Hello</span>     <span class="cm"># prints Hello to the screen</span>
+<span class="fl">$</span> <span class="kw">date</span>           <span class="cm"># shows current date and time</span></code></pre>
+    </div>
+    <div class="note">💡 <code class="inline">$</code> means "type here as a normal user". <code class="inline">#</code> starts a comment — not executed.</div>
+    <div class="example"><strong>▶ Try it:</strong> Open a terminal and type: <code class="inline">echo 'I am learning Linux!'</code></div>
+  </div>
+</div>
+
+<!-- L06 -->
+<div class="lesson" id="l06">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">06</span>
+    <span class="lesson-title">Linux Distros Overview</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A Linux <strong>distro</strong> (distribution) is Linux + a collection of tools packaged together. There are hundreds, but a few dominate.</p>
+    <div class="tag">🐧 Popular Distros</div>
+    <ul class="bullets">
+      <li><strong>Ubuntu</strong> — most beginner-friendly, huge community, great for desktops & servers</li>
+      <li><strong>Debian</strong> — very stable, Ubuntu is based on it</li>
+      <li><strong>CentOS / RHEL</strong> — popular in enterprise servers</li>
+      <li><strong>Arch Linux</strong> — for advanced users who want full control</li>
+      <li><strong>Kali Linux</strong> — security and penetration testing</li>
+    </ul>
+    <div class="example"><strong>▶ Recommendation:</strong> Start with Ubuntu. It has the most tutorials, packages, and community support.</div>
+  </div>
+</div>
+
+<!-- L07 -->
+<div class="lesson" id="l07">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">07</span>
+    <span class="lesson-title">Activate WSL on Windows</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text"><strong>WSL</strong> (Windows Subsystem for Linux) lets you run Linux commands directly inside Windows — no VM needed. Built into Windows 10/11.</p>
+    <div class="tag">🔧 How to Enable WSL</div>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">powershell</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Open PowerShell as Administrator:</span>
+<span class="kw">wsl</span> <span class="fl">--install</span>
+
+<span class="cm"># After restart, open 'Ubuntu' from Start Menu</span>
+<span class="cm"># Create a username and password when prompted</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ After setup:</strong> You can run <code class="inline">ls</code>, <code class="inline">grep</code>, and all Linux commands inside Windows via the Ubuntu app.</div>
+    <div class="note">💡 WSL2 is faster and runs a real Linux kernel inside Windows.</div>
+  </div>
+</div>
+
+<!-- L08 -->
+<div class="lesson" id="l08">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">08</span>
+    <span class="lesson-title">Diffie-Hellman Key Exchange</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Diffie-Hellman is a way for two people to secretly agree on a shared key over a public network — without ever sending the key itself.</p>
+    <div class="tag">🎨 Simple Analogy</div>
+    <p class="body-text">Imagine you and a friend want to agree on a secret color. You both start with a public color (yellow). You each mix in your own private color, swap the result, then mix in your private color again — you both end up with the <strong>same final color</strong> without ever revealing your private one!</p>
+    <div class="tag">📌 Why It Matters</div>
+    <ul class="bullets">
+      <li>Used in SSH, HTTPS, and VPNs</li>
+      <li>Allows secure communication over insecure networks (the internet)</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> Every time you visit <code class="inline">https://</code> in a browser, Diffie-Hellman helps establish a secure session.</div>
+  </div>
+</div>
+
+<!-- L09 -->
+<div class="lesson" id="l09">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">09</span>
+    <span class="lesson-title">MAC, Digital Signatures & RSA</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Tools that ensure data hasn't been tampered with and verify who sent it.</p>
+    <div class="tag">🔐 Concepts</div>
+    <ul class="bullets">
+      <li><strong>MAC</strong> (Message Authentication Code) — a checksum proving a message hasn't changed</li>
+      <li><strong>Digital Signature</strong> — mathematical proof of who sent a message</li>
+      <li><strong>RSA</strong> — popular public-key encryption. Uses two keys: public (share it) and private (keep it secret)</li>
+    </ul>
+    <div class="tag">📬 RSA Analogy</div>
+    <p class="body-text">Think of a <strong>mailbox</strong>: anyone can drop a letter in (public key), but only you have the key to open it (private key).</p>
+    <div class="example"><strong>▶ Example:</strong> When you run <code class="inline">ssh-keygen</code>, you create an RSA key pair — a public and a private key.</div>
+  </div>
+</div>
+
+<!-- L10 -->
+<div class="lesson" id="l10">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">10</span>
+    <span class="lesson-title">SSH Introduction</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text"><strong>SSH</strong> (Secure Shell) lets you securely log into and control a remote Linux server over the network. All traffic is encrypted.</p>
+    <div class="tag">📌 Key Points</div>
+    <ul class="bullets">
+      <li>Default port: <strong>22</strong></li>
+      <li>Everything sent is encrypted — passwords included</li>
+      <li>Used daily by developers, sysadmins, and DevOps engineers</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Basic SSH format:</span>
+<span class="kw">ssh</span> username<span class="op">@</span>server_ip
+
+<span class="cm"># Example:</span>
+<span class="kw">ssh</span> john<span class="op">@</span><span class="st">192.168.1.100</span></code></pre>
+    </div>
+    <div class="note">💡 SSH replaced older insecure tools like Telnet where passwords were sent as plain text.</div>
+  </div>
+</div>
+
+<!-- L11 -->
+<div class="lesson" id="l11">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">11</span>
+    <span class="lesson-title">SSH — Connect Using Password</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">The simplest way: type your username, IP address, and enter your password when prompted.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ssh</span> ahmed<span class="op">@</span><span class="st">192.168.1.50</span>
+ahmed<span class="op">@</span>192.168.1.50's password:
+<span class="cm"># Type password (nothing shows — that's normal!)</span>
+Welcome to Ubuntu 22.04 LTS
+ahmed<span class="op">@</span>server:~<span class="fl">$</span>   <span class="cm">← You're now on the remote machine!</span>
+
+<span class="cm"># Useful options:</span>
+<span class="kw">ssh</span> <span class="fl">-p 2222</span> user<span class="op">@</span>host   <span class="cm"># use port 2222 instead of 22</span>
+<span class="kw">ssh</span> <span class="fl">-v</span> user<span class="op">@</span>host        <span class="cm"># verbose: debug connection issues</span></code></pre>
+    </div>
+    <div class="note">💡 Password login is convenient but less secure. Use key-based auth (Lesson 12) for production servers.</div>
+  </div>
+</div>
+
+<!-- L12 -->
+<div class="lesson" id="l12">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">12</span>
+    <span class="lesson-title">SSH — Connect Using Key Pairs</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Instead of a password, you prove identity using a key pair. More secure and no typing passwords!</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Step 1: Generate key pair (on YOUR local machine)</span>
+<span class="fl">$</span> <span class="kw">ssh-keygen</span> <span class="fl">-t rsa -b 4096</span>
+<span class="cm"># Creates: ~/.ssh/id_rsa (private) and ~/.ssh/id_rsa.pub (public)</span>
+
+<span class="cm"># Step 2: Copy your PUBLIC key to the server</span>
+<span class="fl">$</span> <span class="kw">ssh-copy-id</span> ahmed<span class="op">@</span><span class="st">192.168.1.50</span>
+
+<span class="cm"># Step 3: Login without password!</span>
+<span class="fl">$</span> <span class="kw">ssh</span> ahmed<span class="op">@</span><span class="st">192.168.1.50</span>   <span class="cm"># No prompt!</span></code></pre>
+    </div>
+    <div class="note">💡 NEVER share your private key (<code class="inline">id_rsa</code>). The public key (<code class="inline">id_rsa.pub</code>) is safe to share with anyone.</div>
+  </div>
+</div>
+
+<!-- L13 -->
+<div class="lesson" id="l13">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">13</span>
+    <span class="lesson-title">Unix Philosophy</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">The Unix Philosophy is a set of design principles that make Linux tools powerful and composable.</p>
+    <div class="tag">📜 The Three Rules</div>
+    <ul class="bullets">
+      <li><strong>1.</strong> Write programs that do <em>one thing</em> and do it well</li>
+      <li><strong>2.</strong> Write programs that work together</li>
+      <li><strong>3.</strong> Write programs that handle text — text is the universal interface</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> Instead of one giant program, Linux has: <code class="inline">ls</code> (list), <code class="inline">grep</code> (search), <code class="inline">sort</code> (sort), <code class="inline">wc</code> (count). Chain them with pipes!</div>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Count files containing 'error' in /var/log:</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-r</span> <span class="st">'error'</span> /var/log <span class="op">|</span> <span class="kw">wc</span> <span class="fl">-l</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PART 2 — FILES
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="part2">
+  <span class="part-badge">Part 2</span>
+  <h2>Files — Navigation, Editing & Tools</h2>
+</div>
+
+<!-- L14 -->
+<div class="lesson" id="l14">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">14</span>
+    <span class="lesson-title">Navigating Directories</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Linux uses a tree-like directory structure. Everything starts from <code class="inline">/</code> (called "root").</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">pwd</span>              <span class="cm"># Print Working Directory — where am I?</span>
+<span class="fl">$</span> <span class="kw">ls</span>               <span class="cm"># list files</span>
+<span class="fl">$</span> <span class="kw">ls</span> <span class="fl">-la</span>           <span class="cm"># list ALL files with details (permissions, size)</span>
+<span class="fl">$</span> <span class="kw">cd</span> /home/ahmed   <span class="cm"># go to /home/ahmed</span>
+<span class="fl">$</span> <span class="kw">cd</span> ..            <span class="cm"># go up one level</span>
+<span class="fl">$</span> <span class="kw">cd</span> ~             <span class="cm"># go to your home directory</span>
+<span class="fl">$</span> <span class="kw">cd</span> <span class="fl">-</span>             <span class="cm"># go to previous directory</span></code></pre>
+    </div>
+    <div class="note">💡 <code class="inline">~</code> = your home dir (e.g. <code class="inline">/home/ahmed</code>). <code class="inline">.</code> = current dir. <code class="inline">..</code> = parent dir.</div>
+  </div>
+</div>
+
+<!-- L15 -->
+<div class="lesson" id="l15">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">15</span>
+    <span class="lesson-title">Create, Delete, Copy, and Move Files</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Creating</span>
+<span class="fl">$</span> <span class="kw">touch</span> myfile.txt        <span class="cm"># create empty file</span>
+<span class="fl">$</span> <span class="kw">mkdir</span> myfolder          <span class="cm"># create directory</span>
+<span class="fl">$</span> <span class="kw">mkdir</span> <span class="fl">-p</span> a/b/c          <span class="cm"># create nested dirs</span>
+
+<span class="cm"># Deleting</span>
+<span class="fl">$</span> <span class="kw">rm</span> myfile.txt           <span class="cm"># delete file</span>
+<span class="fl">$</span> <span class="kw">rm</span> <span class="fl">-rf</span> myfolder/        <span class="cm"># delete folder + everything inside</span>
+
+<span class="cm"># Copying &amp; Moving</span>
+<span class="fl">$</span> <span class="kw">cp</span> file.txt backup.txt  <span class="cm"># copy file</span>
+<span class="fl">$</span> <span class="kw">cp</span> <span class="fl">-r</span> folder/ backup/   <span class="cm"># copy folder recursively</span>
+<span class="fl">$</span> <span class="kw">mv</span> file.txt /tmp/       <span class="cm"># move file</span>
+<span class="fl">$</span> <span class="kw">mv</span> old.txt new.txt      <span class="cm"># rename file</span></code></pre>
+    </div>
+    <div class="note">⚠️ <code class="inline">rm -rf</code> has NO undo! Always double-check your path. <code class="inline">rm -rf /</code> would delete your entire system.</div>
+  </div>
+</div>
+
+<!-- L16 -->
+<div class="lesson" id="l16">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">16</span>
+    <span class="lesson-title">Introduction to Vim</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Vim is a powerful terminal text editor. It has <strong>modes</strong> — you switch between them to navigate or type.</p>
+    <div class="tag">🔑 Essential Commands</div>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">vim</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">vim</span> myfile.txt   <span class="cm"># open file</span>
+
+<span class="op">i</span>                  <span class="cm"># enter INSERT mode (start typing)</span>
+<span class="op">ESC</span>                <span class="cm"># return to NORMAL mode</span>
+<span class="op">:w</span>                 <span class="cm"># save the file</span>
+<span class="op">:q</span>                 <span class="cm"># quit</span>
+<span class="op">:wq</span>                <span class="cm"># save and quit</span>
+<span class="op">:q!</span>                <span class="cm"># quit WITHOUT saving (escape!)</span>
+<span class="op">dd</span>                 <span class="cm"># delete current line</span>
+<span class="op">/word</span>              <span class="cm"># search for 'word'</span>
+<span class="op">u</span>                  <span class="cm"># undo</span></code></pre>
+    </div>
+    <div class="note">💡 Stuck in Vim? Press <code class="inline">ESC</code> then type <code class="inline">:q!</code> to exit without saving.</div>
+  </div>
+</div>
+
+<!-- L17 -->
+<div class="lesson" id="l17">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">17</span>
+    <span class="lesson-title">Piping, cat, sort, tail, echo, and tr</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> file.txt             <span class="cm"># print file to screen</span>
+<span class="fl">$</span> <span class="kw">echo</span> <span class="st">'Hello World'</span>       <span class="cm"># print text</span>
+<span class="fl">$</span> <span class="kw">sort</span> names.txt           <span class="cm"># sort lines alphabetically</span>
+<span class="fl">$</span> <span class="kw">tail</span> <span class="fl">-n 5</span> file.txt      <span class="cm"># show last 5 lines</span>
+<span class="fl">$</span> <span class="kw">tail</span> <span class="fl">-f</span> /var/log/syslog <span class="cm"># follow log in real time</span>
+<span class="fl">$</span> <span class="kw">echo</span> <span class="st">'hello'</span> <span class="op">|</span> <span class="kw">tr</span> <span class="st">'a-z'</span> <span class="st">'A-Z'</span>  <span class="cm"># → HELLO</span>
+
+<span class="cm"># Chaining with pipes (|):</span>
+<span class="fl">$</span> <span class="kw">tail</span> <span class="fl">-n 100</span> /var/log/auth.log <span class="op">|</span> <span class="kw">grep</span> <span class="st">'Failed'</span>
+<span class="fl">$</span> <span class="kw">sort</span> names.txt <span class="op">|</span> <span class="kw">uniq</span>    <span class="cm"># sort and remove duplicates</span></code></pre>
+    </div>
+    <div class="note">💡 The pipe <code class="inline">|</code> sends output of one command as input to the next. This is the Unix Philosophy in action!</div>
+  </div>
+</div>
+
+<!-- L18 -->
+<div class="lesson" id="l18">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">18</span>
+    <span class="lesson-title">Everything is a File</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">In Linux, almost everything is represented as a file — not just documents, but hardware devices, network connections, and running processes too.</p>
+    <div class="tag">📂 Special Files</div>
+    <ul class="bullets">
+      <li><code class="inline">/dev/sda</code> — your hard drive</li>
+      <li><code class="inline">/dev/null</code> — a black hole. Write to it to discard output.</li>
+      <li><code class="inline">/dev/zero</code> — produces infinite zeros</li>
+      <li><code class="inline">/proc/cpuinfo</code> — information about your CPU (a virtual file!)</li>
+      <li><code class="inline">/proc/meminfo</code> — current memory usage</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> /proc/cpuinfo          <span class="cm"># see your CPU details</span>
+<span class="fl">$</span> <span class="kw">cat</span> /proc/meminfo          <span class="cm"># see memory breakdown</span>
+<span class="fl">$</span> <span class="kw">echo</span> <span class="st">'discard'</span> <span class="op">></span> /dev/null <span class="cm"># throw away output</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L19 -->
+<div class="lesson" id="l19">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">19</span>
+    <span class="lesson-title">Linux Filesystem Hierarchy Standard</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Linux organizes files in a standardized tree. Knowing where things live makes you faster.</p>
+    <div class="tag">📁 Key Directories</div>
+    <ul class="bullets">
+      <li><code class="inline">/</code> — Root of everything</li>
+      <li><code class="inline">/home</code> — User home directories (<code class="inline">/home/ahmed</code>)</li>
+      <li><code class="inline">/etc</code> — Config files (<code class="inline">/etc/hosts</code>, <code class="inline">/etc/passwd</code>)</li>
+      <li><code class="inline">/var</code> — Variable data: logs, databases (<code class="inline">/var/log/syslog</code>)</li>
+      <li><code class="inline">/tmp</code> — Temporary files (cleared on reboot)</li>
+      <li><code class="inline">/bin</code> — Basic commands (ls, cp, mv)</li>
+      <li><code class="inline">/usr</code> — User programs and libraries</li>
+      <li><code class="inline">/dev</code> — Device files</li>
+      <li><code class="inline">/proc</code> — Virtual files about running processes</li>
+      <li><code class="inline">/boot</code> — Bootloader and kernel</li>
+    </ul>
+    <div class="example"><strong>▶ Rule of thumb:</strong> Config → <code class="inline">/etc</code>. Logs → <code class="inline">/var/log</code>. Your files → <code class="inline">/home</code>.</div>
+  </div>
+</div>
+
+<!-- L20 -->
+<div class="lesson" id="l20">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">20</span>
+    <span class="lesson-title">Redirection — stdin, stdout, stderr</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Every Linux process has 3 standard streams: input (0), output (1), and error (2).</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ls</span> <span class="op">></span> output.txt        <span class="cm"># save stdout to file (overwrites)</span>
+<span class="fl">$</span> <span class="kw">ls</span> <span class="op">>></span> output.txt       <span class="cm"># append stdout to file</span>
+<span class="fl">$</span> <span class="kw">cat</span> <span class="op"><</span> input.txt        <span class="cm"># read stdin from file</span>
+<span class="fl">$</span> <span class="kw">ls</span> /badpath <span class="fl">2</span><span class="op">></span> err.txt  <span class="cm"># save errors (stderr) to file</span>
+<span class="fl">$</span> <span class="kw">command</span> <span class="op">></span> out.txt <span class="fl">2>&amp;1</span>  <span class="cm"># save BOTH stdout and stderr</span>
+<span class="fl">$</span> <span class="kw">command</span> <span class="op">></span> /dev/null <span class="fl">2>&amp;1</span> <span class="cm"># silence ALL output</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L21 -->
+<div class="lesson" id="l21">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">21</span>
+    <span class="lesson-title">Compare and Search for Files</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># find — search by name, size, type</span>
+<span class="fl">$</span> <span class="kw">find</span> / <span class="fl">-name</span> <span class="st">'myfile.txt'</span>        <span class="cm"># find by name</span>
+<span class="fl">$</span> <span class="kw">find</span> /home <span class="fl">-name</span> <span class="st">'*.log'</span>         <span class="cm"># all .log files</span>
+<span class="fl">$</span> <span class="kw">find</span> /tmp <span class="fl">-type f -mtime +7</span>      <span class="cm"># files older than 7 days</span>
+<span class="fl">$</span> <span class="kw">find</span> . <span class="fl">-size +10M</span>               <span class="cm"># files larger than 10MB</span>
+
+<span class="cm"># diff — compare two files</span>
+<span class="fl">$</span> <span class="kw">diff</span> file1.txt file2.txt          <span class="cm"># show differences</span>
+<span class="fl">$</span> <span class="kw">diff</span> <span class="fl">-u</span> file1.txt file2.txt      <span class="cm"># unified format (like git diff)</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L22 -->
+<div class="lesson" id="l22">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">22</span>
+    <span class="lesson-title">grep — Search Inside Files</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text"><strong>grep</strong> searches for text patterns inside files. One of the most-used Linux tools.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">grep</span> <span class="st">'error'</span> /var/log/syslog   <span class="cm"># find lines with 'error'</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-i</span> <span class="st">'error'</span> file.txt        <span class="cm"># case-insensitive</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-r</span> <span class="st">'password'</span> /etc/        <span class="cm"># recursive (all files)</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-n</span> <span class="st">'TODO'</span> mycode.py         <span class="cm"># show line numbers</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-v</span> <span class="st">'debug'</span> app.log          <span class="cm"># lines NOT matching</span>
+<span class="fl">$</span> <span class="kw">grep</span> <span class="fl">-c</span> <span class="st">'error'</span> file.txt         <span class="cm"># count matching lines</span>
+<span class="fl">$</span> <span class="kw">ps</span> aux <span class="op">|</span> <span class="kw">grep</span> nginx              <span class="cm"># find nginx process</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Real use:</strong> <code class="inline">grep -r 'PermitRootLogin' /etc/ssh/</code> — check if root SSH login is allowed.</div>
+  </div>
+</div>
+
+<!-- L23 -->
+<div class="lesson" id="l23">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">23</span>
+    <span class="lesson-title">sed — Stream Editor</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text"><strong>sed</strong> processes text line by line. Most commonly used for search-and-replace.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Replace first 'old' with 'new' per line:</span>
+<span class="fl">$</span> <span class="kw">sed</span> <span class="st">'s/old/new/'</span> file.txt
+
+<span class="cm"># Replace ALL occurrences (g = global):</span>
+<span class="fl">$</span> <span class="kw">sed</span> <span class="st">'s/old/new/g'</span> file.txt
+
+<span class="cm"># Edit file in-place (saves changes):</span>
+<span class="fl">$</span> <span class="kw">sed</span> <span class="fl">-i</span> <span class="st">'s/old/new/g'</span> file.txt
+
+<span class="cm"># Delete lines containing 'debug':</span>
+<span class="fl">$</span> <span class="kw">sed</span> <span class="st">'/debug/d'</span> file.txt
+
+<span class="cm"># Print only lines 5-10:</span>
+<span class="fl">$</span> <span class="kw">sed</span> <span class="fl">-n</span> <span class="st">'5,10p'</span> file.txt</code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> <code class="inline">sed -i 's/localhost/0.0.0.0/g' config.conf</code> — change all localhost to 0.0.0.0.</div>
+  </div>
+</div>
+
+<!-- L24 -->
+<div class="lesson" id="l24">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">24</span>
+    <span class="lesson-title">awk — Text Processing Tool</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text"><strong>awk</strong> processes text column by column. Perfect for structured data like logs or CSV files.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">awk</span> <span class="st">'{print $1}'</span> file.txt         <span class="cm"># print 1st column</span>
+<span class="fl">$</span> <span class="kw">awk</span> <span class="st">'{print $1, $3}'</span> file.txt     <span class="cm"># print columns 1 and 3</span>
+<span class="fl">$</span> <span class="kw">awk</span> <span class="st">'$3 > 100'</span> file.txt           <span class="cm"># lines where col 3 &gt; 100</span>
+<span class="fl">$</span> <span class="kw">awk</span> <span class="fl">-F','</span> <span class="st">'{print $2}'</span> data.csv    <span class="cm"># use comma as separator</span>
+<span class="fl">$</span> <span class="kw">df</span> <span class="fl">-h</span> <span class="op">|</span> <span class="kw">awk</span> <span class="st">'$5+0 > 80 {print}'</span>   <span class="cm"># disks over 80% full</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Real use:</strong> <code class="inline">awk '{print $1}' /var/log/nginx/access.log | sort | uniq -c | sort -rn</code> — top IPs hitting your server.</div>
+  </div>
+</div>
+
+<!-- L25 -->
+<div class="lesson" id="l25">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">25</span>
+    <span class="lesson-title">Virtual File System (VFS)</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">VFS is a layer inside the Linux kernel that provides a <strong>unified interface</strong> for all filesystems. It means you can use the same commands (<code class="inline">ls</code>, <code class="inline">cat</code>, <code class="inline">cp</code>) on ext4, NFS, FAT32, and more.</p>
+    <div class="tag">💾 Common Filesystems</div>
+    <ul class="bullets">
+      <li><strong>ext4</strong> — standard Linux disk filesystem</li>
+      <li><strong>tmpfs</strong> — lives in RAM (fast, lost on reboot)</li>
+      <li><strong>procfs</strong> — the <code class="inline">/proc</code> virtual filesystem</li>
+      <li><strong>sysfs</strong> — <code class="inline">/sys</code> for device info</li>
+    </ul>
+    <div class="example"><strong>▶ Example:</strong> <code class="inline">mount -t tmpfs tmpfs /mnt/ramdisk</code> — creates a super-fast RAM disk.</div>
+  </div>
+</div>
+
+<!-- L26 -->
+<div class="lesson" id="l26">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">26</span>
+    <span class="lesson-title">Hard and Soft Links</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="tag">🔗 Hard Link</div>
+    <p class="body-text">Another name for the same file data. Deleting one name doesn't delete the data — the data is gone only when ALL hard links are removed.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ln</span> original.txt hardlink.txt      <span class="cm"># create hard link</span>
+<span class="fl">$</span> <span class="kw">ln</span> <span class="fl">-s</span> original.txt symlink.txt     <span class="cm"># create soft/symbolic link</span>
+<span class="fl">$</span> <span class="kw">ls</span> <span class="fl">-la</span> symlink.txt                 <span class="cm"># shows: symlink.txt -> original.txt</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> <code class="inline">/usr/bin/python3</code> is often a symlink to <code class="inline">/usr/bin/python3.11</code></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PART 3 — PROCESSES
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="part3">
+  <span class="part-badge">Part 3</span>
+  <h2>Processes — Execution, IPC & Sync</h2>
+</div>
+
+<!-- L27 -->
+<div class="lesson" id="l27">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">27</span>
+    <span class="lesson-title">System Calls</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A <strong>system call</strong> (syscall) is how a program asks the OS kernel to do something it can't do alone — read a file, create a process, or send data over the network.</p>
+    <div class="tag">📋 Common System Calls</div>
+    <ul class="bullets">
+      <li><code class="inline">open() / read() / write() / close()</code> — file operations</li>
+      <li><code class="inline">fork()</code> — create a new process</li>
+      <li><code class="inline">exec()</code> — run a new program</li>
+      <li><code class="inline">exit()</code> — end a process</li>
+      <li><code class="inline">socket() / connect()</code> — network operations</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># See what syscalls a command makes:</span>
+<span class="fl">$</span> <span class="kw">strace</span> ls</code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> When you run <code class="inline">cat file.txt</code>, cat calls <code class="inline">open()</code>, then <code class="inline">read()</code> in a loop, then <code class="inline">write()</code> to print, then <code class="inline">close()</code>.</div>
+  </div>
+</div>
+
+<!-- L28 -->
+<div class="lesson" id="l28">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">28</span>
+    <span class="lesson-title">Interrupts</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">An <strong>interrupt</strong> is a signal that tells the CPU to stop what it's doing and handle something urgent — a keypress, network packet, or disk completion.</p>
+    <div class="tag">⚡ Types</div>
+    <ul class="bullets">
+      <li><strong>Hardware Interrupts</strong> — from devices (keyboard, NIC, disk)</li>
+      <li><strong>Software Interrupts</strong> — triggered by programs (division by zero, system calls)</li>
+    </ul>
+    <div class="tag">🔄 How It Works</div>
+    <p class="body-text">Device signals interrupt → CPU pauses current task → Runs interrupt handler → Returns to original task.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> /proc/interrupts   <span class="cm"># view interrupt counts per CPU</span></code></pre>
+    </div>
+    <div class="note">💡 Interrupts are why you can type while a file downloads — the CPU handles each event as it arrives.</div>
+  </div>
+</div>
+
+<!-- L29 -->
+<div class="lesson" id="l29">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">29</span>
+    <span class="lesson-title">Processes & Threads</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A <strong>process</strong> is a running program with its own memory space. A <strong>thread</strong> is a lightweight execution unit within a process — threads share memory.</p>
+    <div class="tag">⚖ Key Difference</div>
+    <ul class="bullets">
+      <li><strong>Process</strong> — isolated memory, more overhead, safer</li>
+      <li><strong>Thread</strong> — shared memory, less overhead, faster but riskier (data races)</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ps</span> aux                 <span class="cm"># list all running processes</span>
+<span class="fl">$</span> <span class="kw">ps</span> aux <span class="op">|</span> <span class="kw">grep</span> nginx    <span class="cm"># find nginx processes</span>
+<span class="fl">$</span> <span class="kw">kill</span> 1234              <span class="cm"># send SIGTERM to PID 1234</span>
+<span class="fl">$</span> <span class="kw">kill</span> <span class="fl">-9</span> 1234           <span class="cm"># force kill (SIGKILL)</span>
+<span class="fl">$</span> <span class="kw">pstree</span>                 <span class="cm"># show process tree</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> A browser has one process per tab but multiple threads per tab for rendering, JS, and networking.</div>
+  </div>
+</div>
+
+<!-- L30 -->
+<div class="lesson" id="l30">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">30</span>
+    <span class="lesson-title">CPU Scheduler</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">The scheduler decides which process runs on the CPU and for how long. It takes turns rapidly, creating the illusion of parallel execution.</p>
+    <div class="tag">📌 Key Concepts</div>
+    <ul class="bullets">
+      <li><strong>Context Switch</strong> — saving one process's state and loading another's</li>
+      <li><strong>Time Slice</strong> — max time a process gets before being preempted</li>
+      <li><strong>CFS</strong> (Completely Fair Scheduler) — Linux's default scheduler</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">nice</span> <span class="fl">-n 10</span> my_program    <span class="cm"># run with lower priority</span>
+<span class="fl">$</span> <span class="kw">renice</span> <span class="fl">-n -5 -p</span> 1234     <span class="cm"># change priority of running process</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> Video encoding can run at <code class="inline">nice +19</code> so it doesn't slow down your browser.</div>
+  </div>
+</div>
+
+<!-- L31 -->
+<div class="lesson" id="l31">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">31</span>
+    <span class="lesson-title">IPC — Signals</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Signals are software notifications sent to a process to tell it something happened.</p>
+    <div class="tag">📡 Common Signals</div>
+    <ul class="bullets">
+      <li><strong>SIGTERM (15)</strong> — please stop gracefully</li>
+      <li><strong>SIGKILL (9)</strong> — stop NOW, cannot be caught or ignored</li>
+      <li><strong>SIGHUP (1)</strong> — reload configuration</li>
+      <li><strong>SIGINT (2)</strong> — interrupt (Ctrl+C)</li>
+      <li><strong>SIGSTOP (19)</strong> — pause process (Ctrl+Z)</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">kill</span> <span class="fl">-15</span> 1234       <span class="cm"># graceful stop</span>
+<span class="fl">$</span> <span class="kw">kill</span> <span class="fl">-9</span> 1234        <span class="cm"># force stop</span>
+<span class="fl">$</span> <span class="kw">kill</span> <span class="fl">-1</span> 1234        <span class="cm"># reload config</span>
+<span class="fl">$</span> <span class="kw">pkill</span> nginx         <span class="cm"># kill by name</span>
+<span class="fl">$</span> <span class="kw">killall</span> firefox     <span class="cm"># kill all firefox processes</span></code></pre>
+    </div>
+    <div class="note">💡 Always try SIGTERM first. Only use SIGKILL if the process doesn't respond — it won't clean up temp files.</div>
+  </div>
+</div>
+
+<!-- L32 -->
+<div class="lesson" id="l32">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">32</span>
+    <span class="lesson-title">IPC — Pipes</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A <strong>pipe</strong> is a one-way communication channel — the output of one process becomes the input of another.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="cm"># Anonymous pipe:</span>
+<span class="fl">$</span> <span class="kw">ls</span> <span class="op">|</span> <span class="kw">grep</span> <span class="st">'.txt'</span>
+
+<span class="cm"># Named pipe (FIFO):</span>
+<span class="fl">$</span> <span class="kw">mkfifo</span> mypipe
+<span class="fl">$</span> <span class="kw">echo</span> <span class="st">'hello'</span> <span class="op">></span> mypipe <span class="op">&amp;</span>  <span class="cm"># write (background)</span>
+<span class="fl">$</span> <span class="kw">cat</span> mypipe               <span class="cm"># read</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L33 -->
+<div class="lesson" id="l33">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">33</span>
+    <span class="lesson-title">IPC — Message Queues & Shared Memory</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="tag">📨 Message Queues</div>
+    <p class="body-text">Lets processes send structured messages to each other. Messages wait in the queue until picked up. Unlike pipes, messages have types and can be read out of order.</p>
+    <div class="tag">🧠 Shared Memory</div>
+    <p class="body-text">The <strong>fastest IPC</strong> method — two processes share the same region of RAM and read/write directly. No data is copied. But you must synchronize access (with mutex/semaphore) to avoid conflicts.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ipcs</span> <span class="fl">-q</span>    <span class="cm"># show message queues</span>
+<span class="fl">$</span> <span class="kw">ipcs</span> <span class="fl">-m</span>    <span class="cm"># show shared memory</span>
+<span class="fl">$</span> <span class="kw">ipcs</span> <span class="fl">-s</span>    <span class="cm"># show semaphores</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L34 -->
+<div class="lesson" id="l34">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">34</span>
+    <span class="lesson-title">Synchronization — Mutex</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A <strong>Mutex</strong> (Mutual Exclusion lock) ensures only one process/thread can access a shared resource at a time.</p>
+    <div class="tag">⚠ The Race Condition Problem</div>
+    <p class="body-text">Two threads both read a counter (value: 5), both add 1, both write back. Expected: 7. Actual: 6. Both read 5 before either wrote 6.</p>
+    <div class="tag">✅ The Mutex Solution</div>
+    <p class="body-text">Before touching the counter, a thread <strong>locks</strong> the mutex. Other threads wait. After updating, the thread <strong>unlocks</strong> it.</p>
+    <div class="note">⚠️ Deadlock: Thread A holds Lock 1 waiting for Lock 2, while Thread B holds Lock 2 waiting for Lock 1 — they wait forever!</div>
+  </div>
+</div>
+
+<!-- L35 -->
+<div class="lesson" id="l35">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">35</span>
+    <span class="lesson-title">Synchronization — Semaphore</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">A semaphore is like a counter that controls access to a resource. Unlike a mutex (1 user at a time), a semaphore can allow <strong>N users simultaneously</strong>.</p>
+    <div class="tag">🅿 Analogy: Parking Lot</div>
+    <p class="body-text">A parking lot with 5 spaces. Semaphore starts at 5. Each car entering decrements it; leaving increments it. When it hits 0, new cars wait.</p>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">ipcs</span> <span class="fl">-s</span>          <span class="cm"># view semaphores</span>
+<span class="fl">$</span> <span class="kw">ipcrm</span> <span class="fl">-s</span> &lt;semid&gt;  <span class="cm"># remove semaphore</span></code></pre>
+    </div>
+    <div class="example"><strong>▶ Example:</strong> A database connection pool uses a semaphore to limit concurrent connections (e.g., max 100).</div>
+  </div>
+</div>
+
+<!-- L36 -->
+<div class="lesson" id="l36">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">36</span>
+    <span class="lesson-title">Synchronization — File Lock</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">File locks prevent multiple processes from writing the same file simultaneously.</p>
+    <div class="tag">🔒 Types</div>
+    <ul class="bullets">
+      <li><strong>Shared Lock (read)</strong> — multiple readers OK</li>
+      <li><strong>Exclusive Lock (write)</strong> — only one writer at a time</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> /proc/locks                        <span class="cm"># check file locks</span>
+<span class="fl">$</span> <span class="kw">flock</span> <span class="fl">-x</span> /tmp/mylock.lock my_script.sh  <span class="cm"># exclusive lock in scripts</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PART 4 — MEMORY
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="part4">
+  <span class="part-badge">Part 4</span>
+  <h2>Memory — Pages, Virtual Memory & Policy</h2>
+</div>
+
+<!-- L37 -->
+<div class="lesson" id="l37">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">37</span>
+    <span class="lesson-title">Memory Pages</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">The OS doesn't manage memory byte-by-byte — it uses fixed-size chunks called <strong>pages</strong> (usually 4KB). This makes memory management efficient.</p>
+    <div class="tag">📊 Key Facts</div>
+    <ul class="bullets">
+      <li>Default page size: <strong>4,096 bytes (4KB)</strong></li>
+      <li>Huge Pages: 2MB or 1GB — for performance-sensitive apps</li>
+      <li>The kernel uses a <strong>page table</strong> to map virtual → physical addresses</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">getconf</span> PAGE_SIZE              <span class="cm"># check page size (usually 4096)</span>
+<span class="fl">$</span> <span class="kw">cat</span> /proc/meminfo <span class="op">|</span> <span class="kw">grep</span> Huge  <span class="cm"># hugepage info</span>
+<span class="fl">$</span> <span class="kw">vmstat</span> 1                        <span class="cm"># view page faults live</span></code></pre>
+    </div>
+    <div class="note">💡 A "page fault" isn't always an error — it often means the kernel needs to load a page from disk into RAM.</div>
+  </div>
+</div>
+
+<!-- L38 -->
+<div class="lesson" id="l38">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">38</span>
+    <span class="lesson-title">Virtual Memory</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Every process thinks it has the entire computer's memory to itself — that's the illusion created by <strong>virtual memory</strong>. The kernel maps virtual addresses to real physical RAM behind the scenes.</p>
+    <div class="tag">✅ Benefits</div>
+    <ul class="bullets">
+      <li><strong>Isolation</strong> — one process can't read another's memory</li>
+      <li><strong>More than physical RAM</strong> — using swap space on disk</li>
+      <li><strong>Simplified programming</strong> — every process starts at address 0</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> /proc/1234/maps   <span class="cm"># view process memory map (PID 1234)</span>
+<span class="fl">$</span> <span class="kw">pmap</span> 1234             <span class="cm"># user-friendly memory map</span></code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L39 -->
+<div class="lesson" id="l39">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">39</span>
+    <span class="lesson-title">Linux Memory Management Setup</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Linux uses all available RAM productively — idle RAM is wasted RAM.</p>
+    <div class="tag">⚙ Key Mechanisms</div>
+    <ul class="bullets">
+      <li><strong>Page Cache</strong> — recently read files cached in RAM for speed</li>
+      <li><strong>Swap</strong> — when RAM is full, least-used pages move to disk</li>
+      <li><strong>OOM Killer</strong> — when memory is critically low, kills processes</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">free</span> <span class="fl">-h</span>              <span class="cm"># show RAM and swap usage</span>
+<span class="fl">$</span> <span class="kw">swapon</span> <span class="fl">--show</span>        <span class="cm"># show swap devices</span>
+
+<span class="cm"># Create a 2GB swap file:</span>
+<span class="fl">$</span> <span class="kw">fallocate</span> <span class="fl">-l 2G</span> /swapfile
+<span class="fl">$</span> <span class="kw">chmod</span> <span class="fl">600</span> /swapfile
+<span class="fl">$</span> <span class="kw">mkswap</span> /swapfile
+<span class="fl">$</span> <span class="kw">swapon</span> /swapfile</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- L40 -->
+<div class="lesson" id="l40">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">40</span>
+    <span class="lesson-title">Overcommit Policy</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <p class="body-text">Linux allows <strong>overcommitting</strong> memory — letting processes allocate more virtual memory than physically exists. This works because most programs never use all the memory they allocate.</p>
+    <div class="tag">🔢 Modes</div>
+    <ul class="bullets">
+      <li><strong>0</strong> (default) — heuristic: allow reasonable overcommit</li>
+      <li><strong>1</strong> — always allow, never fail malloc()</li>
+      <li><strong>2</strong> — strict: never allow more than RAM + swap</li>
+    </ul>
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">cat</span> /proc/sys/vm/overcommit_memory   <span class="cm"># current mode</span>
+<span class="fl">$</span> <span class="kw">cat</span> /proc/sys/vm/overcommit_ratio    <span class="cm"># ratio setting</span>
+
+<span class="cm"># Temporarily change (until reboot):</span>
+<span class="fl">$</span> <span class="kw">echo</span> 2 <span class="op">></span> /proc/sys/vm/overcommit_memory</code></pre>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PART 5 — MONITORING
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="part5">
+  <span class="part-badge">Part 5</span>
+  <h2>Monitoring — Memory & Processes</h2>
+</div>
+
+<!-- L41 -->
+<div class="lesson" id="l41">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">41</span>
+    <span class="lesson-title">Memory Monitoring</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">free</span> <span class="fl">-h</span>                      <span class="cm"># quick RAM + swap overview</span>
+<span class="fl">$</span> <span class="kw">vmstat</span> 1                      <span class="cm"># memory stats every 1 second</span>
+<span class="fl">$</span> <span class="kw">cat</span> /proc/meminfo             <span class="cm"># full memory breakdown</span>
+<span class="fl">$</span> <span class="kw">top</span>                           <span class="cm"># interactive: memory per process</span>
+<span class="fl">$</span> <span class="kw">htop</span>                          <span class="cm"># better top (apt install htop)</span>
+
+<span class="cm"># Watch memory every 2 seconds:</span>
+<span class="fl">$</span> <span class="kw">watch</span> <span class="fl">-n 2</span> <span class="kw">free</span> <span class="fl">-h</span>
+
+<span class="cm"># Top 5 memory-hungry processes:</span>
+<span class="fl">$</span> <span class="kw">ps</span> aux <span class="fl">--sort=-%mem</span> <span class="op">|</span> <span class="kw">head</span> <span class="fl">-6</span></code></pre>
+    </div>
+    <div class="note">💡 Don't panic if "available" memory looks low — Linux uses RAM for caching. Watch <strong>MemAvailable</strong>, not MemFree.</div>
+  </div>
+</div>
+
+<!-- L42 -->
+<div class="lesson" id="l42">
+  <div class="lesson-header" onclick="toggleLesson(this)">
+    <span class="lesson-num">42</span>
+    <span class="lesson-title">Process Monitoring</span>
+    <span class="lesson-toggle">▼</span>
+  </div>
+  <div class="lesson-body">
+    <div class="code-wrap">
+      <div class="code-toolbar">
+        <div class="code-dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+        <span class="code-lang">bash</span>
+        <button class="copy-btn" onclick="copyCode(this)">copy</button>
+      </div>
+      <pre><code><span class="fl">$</span> <span class="kw">top</span>               <span class="cm"># interactive process monitor (q to quit)</span>
+<span class="fl">$</span> <span class="kw">htop</span>              <span class="cm"># colorful, easier top</span>
+<span class="fl">$</span> <span class="kw">ps</span> aux            <span class="cm"># snapshot of all processes</span>
+<span class="fl">$</span> <span class="kw">pgrep</span> nginx       <span class="cm"># find PID by name</span>
+<span class="fl">$</span> <span class="kw">lsof</span> <span class="fl">-p</span> 1234      <span class="cm"># files opened by process</span>
+<span class="fl">$</span> <span class="kw">strace</span> <span class="fl">-p</span> 1234    <span class="cm"># trace syscalls of running process</span>
+<span class="fl">$</span> <span class="kw">pstree</span> <span class="fl">-p</span>        <span class="cm"># show process tree with PIDs</span>
+
+<span class="cm"># Watch a specific process every 1s:</span>
+<span class="fl">$</span> <span class="kw">watch</span> <span class="fl">-n 1</span> <span class="st">'ps aux | grep myapp'</span></code></pre>
+    </div>
+    <div class="tag">📊 Key ps Columns</div>
+    <ul class="bullets">
+      <li><strong>PID</strong> — Process ID</li>
+      <li><strong>%CPU</strong> — CPU usage percentage</li>
+      <li><strong>%MEM</strong> — RAM usage percentage</li>
+      <li><strong>RSS</strong> — Resident Set Size (actual RAM used)</li>
+      <li><strong>STAT</strong> — R=running, S=sleeping, Z=zombie, T=stopped</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     CHEAT SHEET
+══════════════════════════════════════════════════ -->
+<div class="part-header" id="cheatsheet">
+  <span class="part-badge" style="background:var(--yellow);color:#000">⚡</span>
+  <h2>Quick Reference Cheat Sheet</h2>
+</div>
+
+<table class="cheat-table">
+  <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+  <tbody>
+    <tr><td class="cmd">pwd</td><td class="desc">Show current directory</td></tr>
+    <tr><td class="cmd">ls -la</td><td class="desc">List all files with details</td></tr>
+    <tr><td class="cmd">cd ~</td><td class="desc">Go to home directory</td></tr>
+    <tr><td class="cmd">mkdir -p a/b/c</td><td class="desc">Create nested directories</td></tr>
+    <tr><td class="cmd">rm -rf folder/</td><td class="desc">Delete folder (no undo!)</td></tr>
+    <tr><td class="cmd">cp -r src/ dst/</td><td class="desc">Copy folder recursively</td></tr>
+    <tr><td class="cmd">mv old new</td><td class="desc">Move or rename file</td></tr>
+    <tr><td class="cmd">cat file.txt</td><td class="desc">Print file contents</td></tr>
+    <tr><td class="cmd">grep -r 'text' .</td><td class="desc">Search text in all files</td></tr>
+    <tr><td class="cmd">sed -i 's/a/b/g' f</td><td class="desc">Replace a with b in file</td></tr>
+    <tr><td class="cmd">awk '{print $1}' f</td><td class="desc">Print 1st column</td></tr>
+    <tr><td class="cmd">find . -name '*.log'</td><td class="desc">Find .log files</td></tr>
+    <tr><td class="cmd">ps aux</td><td class="desc">List all processes</td></tr>
+    <tr><td class="cmd">kill -9 PID</td><td class="desc">Force kill a process</td></tr>
+    <tr><td class="cmd">free -h</td><td class="desc">Show memory usage</td></tr>
+    <tr><td class="cmd">df -h</td><td class="desc">Show disk usage</td></tr>
+    <tr><td class="cmd">top / htop</td><td class="desc">Interactive process monitor</td></tr>
+    <tr><td class="cmd">ssh user@host</td><td class="desc">Connect to remote server</td></tr>
+    <tr><td class="cmd">scp file user@host:~</td><td class="desc">Copy file to remote server</td></tr>
+    <tr><td class="cmd">chmod 755 file</td><td class="desc">Set file permissions</td></tr>
+    <tr><td class="cmd">chown user file</td><td class="desc">Change file owner</td></tr>
+    <tr><td class="cmd">sudo command</td><td class="desc">Run as superuser</td></tr>
+    <tr><td class="cmd">man command</td><td class="desc">Read the manual</td></tr>
+    <tr><td class="cmd">history</td><td class="desc">Show command history</td></tr>
+    <tr><td class="cmd">Ctrl+C</td><td class="desc">Stop current command</td></tr>
+    <tr><td class="cmd">Ctrl+Z</td><td class="desc">Pause current command</td></tr>
+    <tr><td class="cmd">Ctrl+R</td><td class="desc">Search command history</td></tr>
+    <tr><td class="cmd">Tab</td><td class="desc">Autocomplete</td></tr>
+  </tbody>
+</table>
+
+<div style="height:3rem"></div>
+
+  </div><!-- /content -->
+</main>
+
+<script>
+// Toggle lesson open/close
+function toggleLesson(header) {
+  const lesson = header.parentElement;
+  lesson.classList.toggle('open');
+}
+
+// Mobile sidebar
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  sb.classList.toggle('open');
+  ov.classList.toggle('show');
+}
+
+// Copy code button
+function copyCode(btn) {
+  const pre = btn.closest('.code-wrap').querySelector('pre');
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = (el.scrollTop / (el.scrollHeight - el.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+  document.getElementById('back-top').classList.toggle('visible', el.scrollTop > 400);
+});
+
+// Active nav highlight
+const navItems = document.querySelectorAll('.nav-item');
+const lessons = document.querySelectorAll('.lesson, .part-header');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navItems.forEach(a => {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+lessons.forEach(l => l.id && observer.observe(l));
+
+// Search/filter nav
+function filterNav(q) {
+  const ql = q.toLowerCase();
+  navItems.forEach(a => {
+    const match = a.textContent.toLowerCase().includes(ql);
+    a.style.display = match ? '' : 'none';
+  });
+  // Hide part headers that have no visible children
+  document.querySelectorAll('.nav-part').forEach(part => {
+    let next = part.nextElementSibling;
+    let anyVisible = false;
+    while (next && !next.classList.contains('nav-part')) {
+      if (next.style.display !== 'none') anyVisible = true;
+      next = next.nextElementSibling;
+    }
+    part.style.display = anyVisible ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>
