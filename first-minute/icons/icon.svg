@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="120 126 272 290" width="272" height="290">
+  <!-- Deep Teal Rounded Shield -->
+  <path d="M 136 140
+       Q 256 112 376 140
+       Q 392 144 392 162
+       L 392 248
+       C 392 328 330 384 266 413
+       Q 256 418 246 413
+       C 182 384 120 328 120 248
+       L 120 162
+       Q 120 144 136 140 Z" fill="#0F5C6E" />
+
+  <!-- Stopwatch Top Button / Stem -->
+  <g fill="none" stroke="#FFFFFF" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="242" y1="158" x2="270" y2="158" />
+    <line x1="256" y1="158" x2="256" y2="178" />
+
+    <!-- Stopwatch Ring -->
+    <path d="M 172 248 A 86 86 0 0 1 294 189" />
+    <path d="M 325 215 A 86 86 0 0 1 340 248" />
+    <path d="M 340 284 A 86 86 0 0 1 172 284" />
+
+    <!-- Clock Hand Pointing Straight Up -->
+    <line x1="256" y1="244" x2="256" y2="198" />
+
+    <!-- Heartbeat (ECG) Line -->
+    <polyline points="148,266 200,266 214,242 228,290 240,266 274,266 284,306 300,214 314,266 364,266" />
+  </g>
+
+  <!-- Emergency Red Accent Dot -->
+  <circle cx="309" cy="199" r="7.5" fill="#D62828" />
+</svg>
