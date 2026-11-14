@@ -1,6 +1,9 @@
 :root { color-scheme: light; font-family: "Inter", "Cairo", "Noto Naskh Arabic", system-ui, sans-serif; color: #26352e; background: #f4f6f4; }
 * { box-sizing: border-box; }
 body { margin: 0; }
+.app-header { height: 64px; display: flex; align-items: center; gap: 12px; padding: 10px 24px; background: #fff; border-bottom: 1px solid #dce3dd; }
+.app-logo { display: block; width: 36px; height: 42px; object-fit: contain; }
+.app-header h1 { margin: 0; font-size: 17px; font-weight: 700; }
 button, textarea { font: inherit; }
 button { border: 1px solid transparent; border-radius: 7px; padding: 9px 15px; cursor: pointer; font-size: 13px; font-weight: 600; background: transparent; color: #58665e; }
 button:hover { background: #e6ede8; }
@@ -8,7 +11,7 @@ button:focus-visible, textarea:focus-visible { outline: 3px solid #3c946a; outli
 button[aria-pressed="true"], .primary { background: #23744d; color: white; }
 .primary:hover, button[aria-pressed="true"]:hover { background: #195c3c; }
 button:disabled { opacity: .55; cursor: wait; }
-.workspace { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; height: 100dvh; }
+.workspace { display: grid; grid-template-columns: 1fr 1fr; height: calc(100vh - 64px); height: calc(100dvh - 64px); }
 .editor-pane, .preview-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
 .editor-pane { background: #fff; border-inline-end: 1px solid #dce3dd; }
 .toolbar { min-height: 76px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e7e3; background: #fff; }
