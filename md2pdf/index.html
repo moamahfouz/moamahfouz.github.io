@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
+  <script src="./js/theme.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Free Markdown to PDF Converter Online | MD to PDF, No Signup</title>
   <meta name="description" content="Convert Markdown to PDF online for free, without signup. Preview MD to PDF live, customize CSS, and export selectable text with Arabic and RTL support.">
@@ -42,6 +43,14 @@
   <header class="app-header">
     <img class="app-logo" src="./logo.png" alt="" width="36" height="42">
     <h1>Markdown to PDF</h1>
+    <details class="theme-picker">
+      <summary>Theme</summary>
+      <div class="theme-popup" role="group" aria-label="App theme">
+        <button type="button" data-theme-option="dark" aria-pressed="true">Dark</button>
+        <button type="button" data-theme-option="light" aria-pressed="false">Light</button>
+        <span id="theme-status" role="status" aria-live="polite"></span>
+      </div>
+    </details>
   </header>
   <main class="workspace">
     <section class="editor-pane" aria-label="Source editor">
