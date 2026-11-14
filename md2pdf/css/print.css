@@ -1,0 +1,35 @@
+@page { size: A4; margin: 15mm; }
+:host { display: block; color: #111; background: white; }
+body, .document { font-family: "Inter", "Cairo", "Noto Naskh Arabic", system-ui, sans-serif; font-size: 11pt; line-height: 1.7; color: #111; background: #fff; overflow-wrap: anywhere; }
+body { margin: 0; }
+.document { padding: 30px 36px; }
+.document > :first-child { margin-top: 0; }
+h1, h2, h3, h4, h5, h6 { line-height: 1.35; break-after: avoid; text-align: start; }
+h1 { font-size: 26pt; letter-spacing: -.03em; margin-block: 0 20px; }
+h2 { font-size: 18pt; margin-block: 28px 12px; padding-bottom: 8px; border-bottom: 1px solid #ddd; }
+h3 { font-size: 14pt; }
+p { margin-block: 12px; text-align: start; orphans: 3; widows: 3; }
+ul, ol { padding-inline-start: 1.8em; padding-inline-end: 0; }
+li { margin-block: 4px; text-align: start; }
+blockquote { margin-inline: 0; padding-inline: 18px 0; border-inline-start: 3px solid #888; color: #333; }
+table { border-collapse: collapse; width: 100%; margin-block: 18px; font-size: .92em; }
+th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: start; }
+th { background: #f2f4f2; font-weight: 600; }
+thead { display: table-header-group; }
+table, tr, pre, blockquote, img, figure { break-inside: avoid; page-break-inside: avoid; }
+pre { direction: ltr; text-align: left; unicode-bidi: isolate; white-space: pre-wrap; overflow-wrap: anywhere; padding: 16px; background: #f4f5f4; border: 1px solid #e2e4e2; border-radius: 5px; line-height: 1.6; }
+code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .88em; }
+:not(pre) > code { background: #f0f2f0; padding: 2px 4px; border-radius: 3px; }
+img { max-width: 100%; height: auto; }
+a { color: #245e41; text-decoration: underline; }
+hr { border: 0; border-top: 1px solid #ccc; margin-block: 24px; }
+.hljs-keyword, .hljs-selector-tag { font-weight: bold; color: #694482; }
+.hljs-string, .hljs-attr { color: #256341; }
+.hljs-number, .hljs-literal { color: #8a491e; }
+.hljs-comment { color: #666; font-style: italic; }
+@media print {
+  /* Keep body text black without overriding syntax token colors. */
+  body, .document { color: #000; background: #fff; }
+  pre, code { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  a { color: #000; }
+}

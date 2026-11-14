@@ -1,0 +1,25 @@
+:root { color-scheme: light; font-family: "Inter", "Cairo", "Noto Naskh Arabic", system-ui, sans-serif; color: #26352e; background: #f4f6f4; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+button, textarea { font: inherit; }
+button { border: 1px solid transparent; border-radius: 7px; padding: 9px 15px; cursor: pointer; font-size: 13px; font-weight: 600; background: transparent; color: #58665e; }
+button:hover { background: #e6ede8; }
+button:focus-visible, textarea:focus-visible { outline: 3px solid #3c946a; outline-offset: -3px; }
+button[aria-pressed="true"], .primary { background: #23744d; color: white; }
+.primary:hover, button[aria-pressed="true"]:hover { background: #195c3c; }
+button:disabled { opacity: .55; cursor: wait; }
+.workspace { display: grid; grid-template-columns: 1fr 1fr; height: 100vh; height: 100dvh; }
+.editor-pane, .preview-pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; }
+.editor-pane { background: #fff; border-inline-end: 1px solid #dce3dd; }
+.toolbar { min-height: 76px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; border-bottom: 1px solid #e2e7e3; background: #fff; }
+.mode-buttons { display: flex; gap: 4px; background: #f1f4f1; padding: 4px; border-radius: 10px; }
+.toolbar h2 { font-size: 15px; margin: 0; font-weight: 600; }
+.primary span { margin-inline-start: 12px; }
+.quiet { padding-inline: 8px; }
+.editor-heading { display: flex; justify-content: space-between; padding: 23px 28px 12px; color: #6b776f; font-size: 12px; }
+.editor-heading span { font-size: 10px; letter-spacing: .12em; color: #96a098; }
+textarea { flex: 1; min-height: 0; width: 100%; resize: none; border: 0; padding: 10px 28px 28px; background: #fff; color: #36443b; font-family: ui-monospace, "Cairo", "Noto Naskh Arabic", monospace; font-size: 14px; line-height: 1.9; tab-size: 2; }
+footer { border-top: 1px solid #edf0ed; padding: 12px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 10px; color: #7a857e; }
+.preview-scroll { flex: 1; min-height: 0; overflow: auto; padding: 28px; }
+#preview { display: block; max-width: 850px; min-height: 100%; margin: auto; background: white; border: 1px solid #e3e8e3; box-shadow: 0 3px 16px #223d2910; }
+@media (max-width: 799px) { .workspace { grid-template-columns: 1fr; grid-template-rows: 50% 50%; } .toolbar { min-height: 64px; padding: 10px 16px; } .editor-heading { padding-top: 12px; } .preview-scroll { padding: 12px; } footer { padding: 8px 16px; } }

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free Markdown to PDF Converter Online | MD to PDF, No Signup</title>
+  <meta name="description" content="Convert Markdown to PDF online for free, without signup. Preview MD to PDF live, customize CSS, and export selectable text with Arabic and RTL support.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#23744d">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Markdown to PDF">
+  <meta property="og:title" content="Free Markdown to PDF Converter Online | No Signup">
+  <meta property="og:description" content="Turn Markdown into PDF for free in your browser. Live preview, custom CSS, syntax highlighting, and Arabic / RTL support. No signup required.">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Free Markdown to PDF Converter Online | No Signup">
+  <meta name="twitter:description" content="Convert MD to PDF in your browser for free. Customize CSS, preview instantly, and export selectable text. No signup required.">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Free Markdown to PDF Converter",
+    "description": "Convert Markdown to PDF online for free without signup, with live preview, custom CSS, syntax highlighting, and Arabic and RTL support.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript and a modern web browser.",
+    "isAccessibleForFree": true,
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "featureList": ["Markdown to PDF conversion", "No signup required", "Live HTML preview", "Custom CSS", "Code syntax highlighting", "Arabic and RTL support", "Selectable PDF text"]
+  }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/style.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/marked@18.2.0/lib/marked.umd.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.4.17/dist/purify.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.12.0/build/highlight.min.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</head>
+<body>
+  <main class="workspace">
+    <section class="editor-pane" aria-label="Source editor">
+      <header class="toolbar">
+        <div class="mode-buttons" role="group" aria-label="Editing mode">
+          <button id="markdown-mode" aria-pressed="true">Markdown</button>
+          <button id="css-mode" aria-pressed="false">Custom CSS</button>
+        </div>
+        <button id="reset" class="quiet">Reset</button>
+      </header>
+      <div class="editor-heading"><label id="editor-label" for="editor">Markdown source</label><span>EDIT</span></div>
+      <textarea id="editor" spellcheck="false" dir="auto" aria-describedby="editor-help"></textarea>
+      <footer><span id="editor-help">Tab inserts two spaces · Ctrl / ⌘ + P to export</span><span id="status" role="status" aria-live="polite">Loading…</span></footer>
+    </section>
+    <section class="preview-pane" aria-labelledby="preview-title">
+      <header class="toolbar"><h2 id="preview-title">HTML Preview</h2><button id="generate" class="primary" disabled>Generate PDF <span aria-hidden="true">↗</span></button></header>
+      <div class="preview-scroll"><div id="preview" aria-label="Rendered Markdown"></div></div>
+    </section>
+  </main>
+  <noscript>This app needs JavaScript enabled to render Markdown and generate PDFs.</noscript>
+</body>
+</html>
