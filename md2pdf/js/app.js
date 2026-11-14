@@ -54,6 +54,33 @@ h3 {
   color: #455a64;
 }
 
+ul {
+  list-style-type: disc;
+  margin-block: 1em;
+  padding-inline-start: 1.8em;
+  padding-inline-end: 0;
+}
+
+li {
+  margin-block: 0.4em;
+  padding-inline-start: 0.25em;
+  line-height: 1.7;
+  text-align: start;
+}
+
+ul li::marker {
+  color: #455a64;
+}
+
+ul ul {
+  list-style-type: circle;
+  margin-block: 0.35em;
+}
+
+ul ul ul {
+  list-style-type: square;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
