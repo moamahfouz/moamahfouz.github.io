@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#172033">
+  <title>PDF viewer</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #e8edf3; color: #172033; font: 16px system-ui, sans-serif; }
+    header { position: sticky; top: 0; z-index: 1; padding: 12px max(12px, env(safe-area-inset-right)) 12px max(12px, env(safe-area-inset-left)); background: #172033; color: white; box-shadow: 0 2px 12px #0002; }
+    .toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; max-width: 1000px; margin: auto; }
+    h1 { font-size: 17px; margin: 0 auto 0 0; }
+    button, a, input { font: inherit; }
+    button, a { min-height: 44px; padding: 10px 13px; border: 1px solid #ffffff40; border-radius: 8px; background: #ffffff10; color: white; text-decoration: none; touch-action: manipulation; }
+    button { cursor: pointer; }
+    button:disabled { opacity: .4; cursor: default; }
+    button:hover:enabled, a:hover { background: #ffffff25; }
+    :focus-visible { outline: 3px solid #64cfff; outline-offset: 3px; }
+    .controls { display: flex; align-items: center; gap: 8px; }
+    input { width: 64px; min-height: 44px; border: 1px solid #bcc8d9; border-radius: 6px; padding: 6px; text-align: center; }
+    #status { text-align: center; padding: 12px; margin: 0; font-size: 14px; }
+    #viewer { overflow: auto; padding: 4px 12px 24px; padding-bottom: max(24px, env(safe-area-inset-bottom)); }
+    canvas { display: block; margin: 0 auto; background: white; box-shadow: 0 3px 18px #17203326; }
+    [hidden] { display: none !important; }
+    noscript p { padding: 16px; text-align: center; }
+    noscript a { color: #172033; border-color: #172033; }
+    @media (max-width: 600px) {
+      h1 { flex: 1; }
+      .navigation { order: 1; width: 100%; justify-content: center; }
+      button, a { padding: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="toolbar" aria-label="PDF controls">
+      <h1>PDF viewer</h1>
+      <div class="controls">
+        <button id="out" type="button" aria-label="Zoom out" disabled>−</button>
+        <button id="fit" type="button" disabled>Fit width</button>
+        <button id="in" type="button" aria-label="Zoom in" disabled>+</button>
+      </div>
+      <a href="./pdf.pdf" download>Download</a>
+      <div class="controls navigation">
+        <button id="previous" type="button" disabled>Previous</button>
+        <label for="page">Page</label>
+        <input id="page" type="number" min="1" value="1" inputmode="numeric" disabled>
+        <span id="total">/ …</span>
+        <button id="next" type="button" disabled>Next</button>
+      </div>
+    </div>
+  </header>
+  <p id="status" role="status" aria-live="polite">Loading PDF… Large documents may take a moment.</p>
+  <main id="viewer" aria-label="PDF document" aria-busy="true">
+    <canvas id="canvas" hidden aria-label="PDF page"></canvas>
+  </main>
+  <noscript><p>Enable JavaScript to view this document, or <a href="./pdf.pdf">open the PDF</a>.</p></noscript>
+  <script type="module">
+    const $ = id => document.getElementById(id);
+    let pdf, currentPage = 1, zoom = 1, rendering = false, pending = false;
+    const canvas = $('canvas');
+    const status = $('status');
+
+    function updateControls() {
+      $('previous').disabled = !pdf || currentPage <= 1;
+      $('next').disabled = !pdf || currentPage >= pdf.numPages;
+      $('page').disabled = !pdf;
+      $('page').value = currentPage;
+      $('in').disabled = !pdf || zoom >= 3;
+      $('out').disabled = !pdf || zoom <= 0.5;
+      $('fit').disabled = !pdf;
+    }
+
+    async function render() {
+      if (!pdf) return;
+      if (rendering) { pending = true; return; }
+      rendering = true;
+      $('viewer').setAttribute('aria-busy', 'true');
+      status.textContent = `Loading page ${currentPage}…`;
+      let page;
+      try {
+        const pageNumber = currentPage;
+        page = await pdf.getPage(pageNumber);
+        const base = page.getViewport({ scale: 1 });
+        const width = Math.max(1, $('viewer').clientWidth - 24);
+        const viewport = page.getViewport({ scale: width / base.width * zoom });
+        // Limit canvas memory and dimensions for mobile browsers.
+        const ratio = Math.min(window.devicePixelRatio || 1, 2,
+          Math.sqrt(4000000 / (viewport.width * viewport.height)),
+          4096 / viewport.width, 4096 / viewport.height);
+        canvas.width = Math.max(1, Math.floor(viewport.width * ratio));
+        canvas.height = Math.max(1, Math.floor(viewport.height * ratio));
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.height = `${viewport.height}px`;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport,
+          transform: [ratio, 0, 0, ratio, 0, 0] }).promise;
+        canvas.hidden = false;
+        canvas.setAttribute('aria-label', `Page ${pageNumber} of ${pdf.numPages}. Use Download to read the original PDF with assistive technology.`);
+        status.textContent = `Page ${pageNumber} of ${pdf.numPages} · Zoom ${Math.round(zoom * 100)}% of page width`;
+      } catch (error) {
+        console.error(error);
+        status.textContent = 'This page could not be displayed. Try another page or use Download to open the PDF.';
+      } finally {
+        page?.cleanup();
+        rendering = false;
+        $('viewer').setAttribute('aria-busy', 'false');
+        updateControls();
+        if (pending) { pending = false; render(); }
+      }
+    }
+
+    function goTo(number) {
+      if (!pdf) return;
+      currentPage = Math.min(pdf.numPages, Math.max(1, Math.trunc(Number(number)) || 1));
+      $('viewer').scrollLeft = 0;
+      updateControls();
+      render();
+    }
+    $('previous').addEventListener('click', () => goTo(currentPage - 1));
+    $('next').addEventListener('click', () => goTo(currentPage + 1));
+    $('page').addEventListener('change', event => goTo(event.target.value));
+    $('in').addEventListener('click', () => { zoom = Math.min(3, zoom + 0.25); render(); });
+    $('out').addEventListener('click', () => { zoom = Math.max(0.5, zoom - 0.25); render(); });
+    $('fit').addEventListener('click', () => { zoom = 1; render(); });
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(render, 150);
+    });
+
+    try {
+      const pdfjs = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+      const library = window.pdfjsLib || pdfjs;
+      library.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const loading = library.getDocument({ url: './pdf.pdf', isEvalSupported: false });
+      loading.onProgress = ({ loaded, total }) => {
+        if (!pdf) status.textContent = total
+          ? `Loading PDF… ${Math.min(100, Math.round(loaded / total * 100))}%`
+          : 'Loading PDF… Large documents may take a moment.';
+      };
+      pdf = await loading.promise;
+      $('total').textContent = `/ ${pdf.numPages}`;
+      $('page').max = pdf.numPages;
+      updateControls();
+      await render();
+    } catch (error) {
+      console.error(error);
+      $('viewer').setAttribute('aria-busy', 'false');
+      status.textContent = 'Unable to load the viewer. Check your connection or use Download to open the PDF.';
+    }
+  </script>
+</body>
+</html>
