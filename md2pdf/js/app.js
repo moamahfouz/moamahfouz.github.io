@@ -1,5 +1,6 @@
 import { createPreview, renderMarkdown } from './render.js';
 import { generatePDF } from './pdf.js';
+import { pdfToMarkdown } from './import-pdf.js';
 
 const STORAGE_KEY = 'markdown-to-pdf.v1';
 const SAMPLE = `# A little Markdown. A polished PDF.
@@ -118,7 +119,10 @@ async function init() {
   const generate = document.querySelector('#generate');
   const markdownMode = document.querySelector('#markdown-mode');
   const cssMode = document.querySelector('#css-mode');
+  const importButton = document.querySelector('#import-pdf');
+  const pdfFile = document.querySelector('#pdf-file');
   const state = restore();
+  let markdownFilename = 'document.md';
   let mode = 'markdown';
   let printing = false;
   let updatePreview;
@@ -155,6 +159,48 @@ async function init() {
     persist();
   }
 
+  importButton.addEventListener('click', () => pdfFile.click());
+  pdfFile.addEventListener('change', async () => {
+    const file = pdfFile.files[0];
+    pdfFile.value = '';
+    if (!file || importButton.disabled) return;
+
+    importButton.disabled = true;
+    status.textContent = 'Reading PDF…';
+    try {
+      const markdown = await pdfToMarkdown(file);
+      if (!markdown) {
+        status.textContent = 'No selectable text found. Scanned PDFs require OCR.';
+        return;
+      }
+      if (state.markdown.trim() && state.markdown !== SAMPLE &&
+          !window.confirm('Replace the current Markdown with text from this PDF?')) {
+        status.textContent = 'PDF import canceled.';
+        return;
+      }
+      state.markdown = markdown;
+      markdownFilename = file.name.replace(/\.pdf$/i, '') + '.md';
+      setMode('markdown');
+      save();
+      render();
+    } catch (error) {
+      status.textContent = error.name === 'PasswordException'
+        ? 'This PDF is password-protected. Import an unlocked copy.'
+        : 'Could not import this PDF. Check your connection and try a readable PDF.';
+    } finally {
+      importButton.disabled = false;
+    }
+  });
+
+  document.querySelector('#download-markdown').addEventListener('click', () => {
+    const url = URL.createObjectURL(new Blob([state.markdown], { type: 'text/markdown;charset=utf-8' }));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = markdownFilename;
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
   async function print() {
     if (printing || !updatePreview) return;
     printing = true;
@@ -186,6 +232,7 @@ async function init() {
   document.querySelector('#reset').addEventListener('click', () => {
     if (!window.confirm('Clear your saved Markdown and CSS and restore the sample?')) return;
     state.markdown = SAMPLE;
+    markdownFilename = 'document.md';
     state.css = DEFAULT_CSS;
     try { localStorage.removeItem(STORAGE_KEY); } catch { /* Storage may be disabled. */ }
     setMode('markdown');

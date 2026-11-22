@@ -21,8 +21,8 @@ button:disabled { opacity: .55; cursor: wait; }
 .toolbar h2 { font-size: 15px; margin: 0; font-weight: 600; }
 .primary span { margin-inline-start: 12px; }
 .quiet { padding-inline: 8px; }
-.editor-heading { display: flex; justify-content: space-between; padding: 23px 28px 12px; color: var(--muted); font-size: 12px; }
-.editor-heading span { font-size: 10px; letter-spacing: .12em; color: var(--muted); }
+.editor-heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; padding: 12px 28px 4px; color: var(--muted); font-size: 12px; }
+.document-actions { display: flex; flex-wrap: wrap; gap: 4px; }
 textarea { flex: 1; min-height: 0; width: 100%; resize: none; border: 0; padding: 10px 28px 28px; background: var(--surface); color: var(--text); font-family: ui-monospace, "Cairo", "Noto Naskh Arabic", monospace; font-size: 14px; line-height: 1.9; tab-size: 2; }
 footer { border-top: 1px solid var(--border); padding: 12px 24px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; font-size: 10px; color: var(--muted); }
 .preview-scroll { flex: 1; min-height: 0; overflow: auto; padding: 28px; }

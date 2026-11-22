@@ -61,7 +61,14 @@
         </div>
         <button id="reset" class="quiet">Reset</button>
       </header>
-      <div class="editor-heading"><label id="editor-label" for="editor">Markdown source</label><span>EDIT</span></div>
+      <div class="editor-heading">
+        <label id="editor-label" for="editor">Markdown source</label>
+        <div class="document-actions">
+          <button type="button" id="import-pdf" class="quiet">Import PDF</button>
+          <input id="pdf-file" type="file" accept=".pdf,application/pdf" hidden>
+          <button type="button" id="download-markdown" class="quiet">Download Markdown</button>
+        </div>
+      </div>
       <textarea id="editor" spellcheck="false" dir="auto" aria-describedby="editor-help"></textarea>
       <footer><span id="editor-help">Tab inserts two spaces · Ctrl / ⌘ + P to export</span><span id="status" role="status" aria-live="polite">Loading…</span></footer>
     </section>
